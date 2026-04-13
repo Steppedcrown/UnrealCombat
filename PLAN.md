@@ -121,17 +121,17 @@ Create the following Blueprint Gameplay Effects in `Content/Combat/Effects/`:
 ## Phase 4 — Data-Driven Combat
 
 ### UCombatMoveData (C++)
-- [ ] Create C++ class `UCombatMoveData` inheriting from `UPrimaryDataAsset`
-- [ ] Add the following `UPROPERTY` fields:
-  - [ ] `float Damage`
-  - [ ] `int32 NodeCost`
-  - [ ] `int32 NodeGain`
-  - [ ] `int32 StartupFrames`
-  - [ ] `int32 ActiveFrames`
-  - [ ] `int32 RecoveryFrames`
-  - [ ] `UAnimMontage* AnimationMontage`
-  - [ ] `UNiagaraSystem* HitEffect`
-  - [ ] `USoundBase* HitSound`
+- [x] Create C++ class `UCombatMoveData` inheriting from `UPrimaryDataAsset`
+- [x] Add the following `UPROPERTY` fields:
+  - [x] `float Damage`
+  - [x] `int32 NodeCost`
+  - [x] `int32 NodeGain`
+  - [x] `int32 StartupFrames`
+  - [x] `int32 ActiveFrames`
+  - [x] `int32 RecoveryFrames`
+  - [x] `UAnimMontage* AnimationMontage`
+  - [x] `UNiagaraSystem* HitEffect`
+  - [x] `USoundBase* HitSound`
 
 ### Data Assets
 Create the following Data Asset instances in `Content/Combat/MoveData/`:
