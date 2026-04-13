@@ -77,7 +77,7 @@ The template already has `IA_Move`, `IA_Look`, `IA_Jump`, and attack actions. Ad
 - [x] Bind each to a stub handler in `SetupPlayerInputComponent()` (full ability wiring comes in Phase 5)
 
 ### Lock-On System
-- [ ] Create a C++ component `ULockOnComponent` and attach it to `ACombatCharacter`
+- [x] Create a C++ component `ULockOnComponent` and attach it to `ACombatCharacter`
 - [ ] On `IA_LockOn` press: perform a sphere overlap to find nearby `ACombatCharacter` enemies within a forward cone
 - [ ] Store the closest valid target as `TargetActor`
 - [ ] Each tick while locked: rotate the spring arm to face `TargetActor` using `FMath::RInterpTo`

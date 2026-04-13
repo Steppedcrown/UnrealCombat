@@ -75,6 +75,9 @@ ACombatCharacter::ACombatCharacter()
 
 	// create the motion warping component
 	MotionWarpingComponent = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("MotionWarpingComponent"));
+
+	// create the lock-on component
+	LockOnComponent = CreateDefaultSubobject<ULockOnComponent>(TEXT("LockOnComponent"));
 }
 
 void ACombatCharacter::Move(const FInputActionValue& Value)
