@@ -55,17 +55,17 @@ Specific step-by-step implementation plan for UnrealCombat. Mark steps as comple
 - [x] In `CombatCharacter.cpp`, include `AbilitySystemComponent.h` and `MotionWarpingComponent.h`
 - [x] Create both components in the constructor with `CreateDefaultSubobject`
 - [x] Implement `PossessedBy` and `OnRep_PlayerState` calling `AbilitySystemComponent->InitAbilityActorInfo(this, this)`
-- [ ] Compile and confirm the game runs without crashing
+- [x] Compile and confirm the game runs without crashing
 
 ### Blueprints
-- [ ] Create Blueprint `BP_Player` in `Content/Characters/` inheriting from `ACombatCharacter`
-  - [ ] Assign skeletal mesh (use template mannequin temporarily)
-  - [ ] Assign existing template animation blueprint temporarily
-  - [ ] Assign all Input Actions from the template's input folder
-  - [ ] Assign the `LifeBar` widget class (use template's `WBP_CombatLifeBar` temporarily)
-- [ ] Create Blueprint `BP_Enemy` in `Content/Characters/` inheriting from `ACombatCharacter`
-- [ ] Set `BP_Player` as the Default Pawn in the Game Mode
-- [ ] Confirm the game launches and the character moves, jumps, and attacks correctly
+- [x] Create Blueprint `BP_Player` in `Content/Characters/` inheriting from `ACombatCharacter`
+  - [x] Assign skeletal mesh (use template mannequin temporarily)
+  - [x] Assign existing template animation blueprint temporarily
+  - [x] Assign all Input Actions from the template's input folder
+  - [x] Assign the `LifeBar` widget class (use template's `WBP_CombatLifeBar` temporarily)
+- [x] Create Blueprint `BP_Enemy` in `Content/Characters/` inheriting from `ACombatCharacter`
+- [x] Set `BP_Player` as the Default Pawn in the Game Mode
+- [x] Confirm the game launches and the character moves, jumps, and attacks correctly
 
 ### New Input Actions
 The template already has `IA_Move`, `IA_Look`, `IA_Jump`, and attack actions. Add only what's missing:
