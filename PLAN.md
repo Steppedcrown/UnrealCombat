@@ -7,7 +7,7 @@ Specific step-by-step implementation plan for UnrealCombat. Mark steps as comple
 ## Phase 1 — Project Foundation
 
 ### Folder Structure
-- [ ] In the UE5 Content Browser, create the following folders under `Content/`:
+- [x] In the UE5 Content Browser, create the following folders under `Content/`:
   - `Core`
   - `Characters`
   - `Combat`
@@ -18,10 +18,10 @@ Specific step-by-step implementation plan for UnrealCombat. Mark steps as comple
   - `Levels`
 
 ### Plugins
-- [ ] Open **Edit > Plugins** and enable **Gameplay Abilities**
-- [ ] Enable **Motion Warping**
-- [ ] Confirm **Enhanced Input** is enabled (on by default in UE5.1+)
-- [ ] Restart the editor after enabling plugins
+- [x] Open **Edit > Plugins** and enable **Gameplay Abilities**
+- [x] Enable **Motion Warping**
+- [x] Confirm **Enhanced Input** is enabled (on by default in UE5.1+)
+- [x] Restart the editor after enabling plugins
 - [ ] In `UnrealCombat.Build.cs`, add to `PublicDependencyModuleNames`:
   - `"GameplayAbilities"`, `"GameplayTasks"`, `"GameplayTags"`, `"MotionWarping"`
 
