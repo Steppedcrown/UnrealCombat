@@ -69,11 +69,11 @@ Specific step-by-step implementation plan for UnrealCombat. Mark steps as comple
 
 ### New Input Actions
 The template already has `IA_Move`, `IA_Look`, `IA_Jump`, and attack actions. Add only what's missing:
-- [ ] Create `IA_Block` (Digital) in the template's input folder
-- [ ] Create `IA_Expel` (Digital)
-- [ ] Create `IA_Rip` (Digital)
-- [ ] Create `IA_LockOn` (Digital)
-- [ ] Add all four to the existing IMC with keyboard and controller bindings
+- [x] Create `IA_Block` (Digital) in the template's input folder
+- [x] Create `IA_Expel` (Digital)
+- [x] Create `IA_Rip` (Digital)
+- [x] Create `IA_LockOn` (Digital)
+- [x] Add all four to the existing IMC with keyboard and controller bindings
 - [ ] Bind each to a stub handler in `SetupPlayerInputComponent()` (full ability wiring comes in Phase 5)
 
 ### Lock-On System
