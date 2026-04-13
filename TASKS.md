@@ -36,15 +36,15 @@ A phased implementation plan for building UnrealCombat to AAA standards in Unrea
 
 ## Phase 2 — Core Character & Movement
 
-- [ ] Create `ACombatCharacter` base C++ class inheriting from `ACharacter`
-  - Implement `UAbilitySystemComponent` and `UAttributeSet`
-  - Attach to both Player and Enemy via this base class
-- [ ] Set up Enhanced Input
-  - Define `IMC_Default` Input Mapping Context
-  - Create Input Actions: `IA_Move`, `IA_Look`, `IA_Sprint`, `IA_Jump`, `IA_BasicAttack`, `IA_Block`, `IA_Expel`, `IA_Rip`, `IA_LockOn`
+> The template's `Variant_Combat/CombatCharacter` already provides camera, spring arm, movement, Enhanced Input bindings, a basic combo/charged attack framework, HP, damage, death, and respawn. We extend this class with GAS rather than replacing it.
+
+- [ ] Extend `Variant_Combat/ACombatCharacter` with GAS:
+  - Add `IAbilitySystemInterface`, `UAbilitySystemComponent`, `UMotionWarpingComponent`
+  - Implement `PossessedBy` and `OnRep_PlayerState` to init ASC actor info
+- [ ] Add new Input Actions to the existing `IMC` for our abilities:
+  - `IA_Block`, `IA_Expel`, `IA_Rip`, `IA_LockOn` (Move, Look, Jump, and basic attack already exist in the template)
   - Ensure full controller and keyboard/mouse support
-- [ ] Implement walk, sprint, and jump using Character Movement Component
-- [ ] Set up third-person camera with spring arm
+- [ ] Create `BP_Player` and `BP_Enemy` inheriting from `ACombatCharacter`
 - [ ] Implement **camera lock-on** system
   - Soft-lock targeting: find nearest enemy in cone of view
   - Rotate camera and character to face target while locked
@@ -54,11 +54,14 @@ A phased implementation plan for building UnrealCombat to AAA standards in Unrea
 
 ## Phase 3 — Attribute System (GAS)
 
+> The template's `ACombatCharacter` uses simple `float CurrentHP / MaxHP` fields and a `UCombatLifeBar` widget. These will be replaced by GAS attributes and effects. The template's `TakeDamage`, `HandleDeath`, and `ApplyDamage` implementations will be superseded by GAS Gameplay Effects.
+
 - [ ] Create `UCombatAttributeSet` with the following attributes:
   - `Health`, `MaxHealth`
   - `Nodes`, `MaxNodes`
   - `TempNodes` (separate pool, not capped by `MaxNodes`)
 - [ ] Implement attribute clamping and change delegates in `PostGameplayEffectExecute`
+- [ ] Remove `CurrentHP`, `MaxHP`, `LifeBarWidget` and related logic from `ACombatCharacter` once GAS attributes are working
 - [ ] Create Gameplay Effects for each attribute interaction:
   - `GE_DamageHealth` — deals damage
   - `GE_RestoreNode` — adds Nodes
@@ -79,6 +82,8 @@ A phased implementation plan for building UnrealCombat to AAA standards in Unrea
 ---
 
 ## Phase 5 — Ability Implementation (GAS)
+
+> The template's `ACombatCharacter` has a working combo and charged attack system driven directly by montages. These will be replaced by GAS abilities that use the same montages but route through the ASC for tag/cost management and data-driven tuning.
 
 Implement each ability as a `UGameplayAbility` subclass. Each ability should:
 - Check and consume required tags/costs via GAS

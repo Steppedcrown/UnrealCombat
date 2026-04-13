@@ -7,6 +7,7 @@
 #include "CombatAttacker.h"
 #include "CombatDamageable.h"
 #include "Animation/AnimInstance.h"
+#include "AbilitySystemInterface.h"
 #include "CombatCharacter.generated.h"
 
 class USpringArmComponent;
@@ -15,6 +16,9 @@ class UInputAction;
 struct FInputActionValue;
 class UCombatLifeBar;
 class UWidgetComponent;
+class UAbilitySystemComponent;
+class UMotionWarpingComponent;
+class ULockOnComponent;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogCombatCharacter, Log, All);
 
@@ -27,7 +31,7 @@ DECLARE_LOG_CATEGORY_EXTERN(LogCombatCharacter, Log, All);
  *  - Respawning
  */
 UCLASS(abstract)
-class ACombatCharacter : public ACharacter, public ICombatAttacker, public ICombatDamageable
+class ACombatCharacter : public ACharacter, public ICombatAttacker, public ICombatDamageable, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
@@ -72,6 +76,22 @@ protected:
 	/** Toggle Camera Side Input Action */
 	UPROPERTY(EditAnywhere, Category ="Input")
 	UInputAction* ToggleCameraAction;
+
+	/** Block Input Action */
+	UPROPERTY(EditAnywhere, Category="Input")
+	UInputAction* BlockAction;
+
+	/** Expel Input Action */
+	UPROPERTY(EditAnywhere, Category="Input")
+	UInputAction* ExpelAction;
+
+	/** Rip Input Action */
+	UPROPERTY(EditAnywhere, Category="Input")
+	UInputAction* RipAction;
+
+	/** Lock-On Input Action */
+	UPROPERTY(EditAnywhere, Category="Input")
+	UInputAction* LockOnAction;
 
 	/** Max amount of HP the character will have on respawn */
 	UPROPERTY(EditAnywhere, Category="Damage", meta = (ClampMin = 0, ClampMax = 100))
@@ -186,9 +206,33 @@ protected:
 	FTransform MeshStartingTransform;
 
 public:
-	
+
 	/** Constructor */
 	ACombatCharacter();
+
+	/** IAbilitySystemInterface */
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+
+	FORCEINLINE UMotionWarpingComponent* GetMotionWarpingComponent() const { return MotionWarpingComponent; }
+
+protected:
+
+	/** Called on the server when a controller possesses this character. Initialises ASC actor info. */
+	virtual void PossessedBy(AController* NewController) override;
+
+	/** Called on clients when PlayerState replicates. Initialises ASC actor info for the owning client. */
+	virtual void OnRep_PlayerState() override;
+
+private:
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))
+	UAbilitySystemComponent* AbilitySystemComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	UMotionWarpingComponent* MotionWarpingComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	ULockOnComponent* LockOnComponent;
 
 protected:
 
@@ -209,6 +253,18 @@ protected:
 
 	/** Called for toggle camera side input */
 	void ToggleCamera();
+
+	/** Called for block input */
+	void BlockPressed();
+
+	/** Called for expel input */
+	void ExpelPressed();
+
+	/** Called for rip input */
+	void RipPressed();
+
+	/** Called for lock-on input */
+	void LockOnPressed();
 
 	/** BP hook to animate the camera side switch */
 	UFUNCTION(BlueprintImplementableEvent, Category="Combat")

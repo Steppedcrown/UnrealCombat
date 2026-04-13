@@ -44,52 +44,51 @@ Specific step-by-step implementation plan for UnrealCombat. Mark steps as comple
 
 ## Phase 2 — Core Character & Movement
 
-### ACombatCharacter (C++)
-- [x] In Visual Studio / Rider, create a new C++ class `ACombatCharacter` inheriting from `ACharacter`
-- [x] Add `UAbilitySystemComponent* AbilitySystemComponent` as a `UPROPERTY`
-- [x] Add `UCombatAttributeSet* AttributeSet` as a `UPROPERTY`
-- [x] Implement the `IAbilitySystemInterface` and return `AbilitySystemComponent` from `GetAbilitySystemComponent()`
-- [x] Initialize both components in the constructor
-- [x] Call `AbilitySystemComponent->InitAbilityActorInfo(this, this)` in `PossessedBy` (for player) and `OnRep_PlayerState` (for AI)
+> The template's `Variant_Combat/ACombatCharacter` already provides camera, spring arm, movement, input bindings, combo/charged attack framework, HP, damage, death, and respawn. We extend it with GAS rather than replacing it.
+
+### ACombatCharacter — Add GAS (C++)
+- [x] In `Variant_Combat/CombatCharacter.h`, add `IAbilitySystemInterface` to the class inheritance
+- [x] Forward declare `UAbilitySystemComponent` and `UMotionWarpingComponent`
+- [x] Add `UAbilitySystemComponent* AbilitySystemComponent` as a private `UPROPERTY`
+- [x] Add `UMotionWarpingComponent* MotionWarpingComponent` as a private `UPROPERTY`
+- [x] Declare `GetAbilitySystemComponent()`, `PossessedBy()`, and `OnRep_PlayerState()`
+- [x] In `CombatCharacter.cpp`, include `AbilitySystemComponent.h` and `MotionWarpingComponent.h`
+- [x] Create both components in the constructor with `CreateDefaultSubobject`
+- [x] Implement `PossessedBy` and `OnRep_PlayerState` calling `AbilitySystemComponent->InitAbilityActorInfo(this, this)`
+- [x] Compile and confirm the game runs without crashing
+
+### Blueprints
 - [x] Create Blueprint `BP_Player` in `Content/Characters/` inheriting from `ACombatCharacter`
+  - [x] Assign skeletal mesh (use template mannequin temporarily)
+  - [x] Assign existing template animation blueprint temporarily
+  - [x] Assign all Input Actions from the template's input folder
+  - [x] Assign the `LifeBar` widget class (use template's `WBP_CombatLifeBar` temporarily)
 - [x] Create Blueprint `BP_Enemy` in `Content/Characters/` inheriting from `ACombatCharacter`
+- [x] Set `BP_Player` as the Default Pawn in the Game Mode
+- [x] Confirm the game launches and the character moves, jumps, and attacks correctly
 
-### Enhanced Input
-- [ ] Create an **Input Mapping Context** asset `IMC_Default` in `Content/Core/`
-- [ ] Create the following **Input Action** assets in `Content/Core/Input/`:
-  - [ ] `IA_Move` (Axis2D)
-  - [ ] `IA_Look` (Axis2D)
-  - [ ] `IA_Sprint` (Digital)
-  - [ ] `IA_Jump` (Digital)
-  - [ ] `IA_BasicAttack` (Digital)
-  - [ ] `IA_Block` (Digital)
-  - [ ] `IA_Expel` (Digital)
-  - [ ] `IA_Rip` (Digital)
-  - [ ] `IA_LockOn` (Digital)
-- [ ] Bind all Input Actions to keys/buttons in `IMC_Default` (WASD + mouse for keyboard, left stick + face buttons for controller)
-- [ ] In `ACombatCharacter::BeginPlay()`, add `IMC_Default` to the local player's Enhanced Input subsystem
-- [ ] Bind each Input Action to a handler function in `SetupPlayerInputComponent()`
-
-### Movement
-- [ ] In `BP_Player`, verify walk and sprint work — set sprint speed in `CharacterMovementComponent` when `IA_Sprint` is held
-- [ ] Confirm jump works via `IA_Jump` bound to `ACharacter::Jump()`
-- [ ] Tune `MaxWalkSpeed` and `MaxSprintSpeed` values in the Blueprint defaults
-
-### Camera
-- [ ] Confirm the Third Person template's `SpringArmComponent` and `CameraComponent` are present on `BP_Player`
-- [ ] Tune spring arm length and camera lag for a comfortable third-person feel
+### New Input Actions
+The template already has `IA_Move`, `IA_Look`, `IA_Jump`, and attack actions. Add only what's missing:
+- [x] Create `IA_Block` (Digital) in the template's input folder
+- [x] Create `IA_Expel` (Digital)
+- [x] Create `IA_Rip` (Digital)
+- [x] Create `IA_LockOn` (Digital)
+- [x] Add all four to the existing IMC with keyboard and controller bindings
+- [x] Bind each to a stub handler in `SetupPlayerInputComponent()` (full ability wiring comes in Phase 5)
 
 ### Lock-On System
-- [ ] Create a C++ component `ULockOnComponent` and attach it to `ACombatCharacter`
-- [ ] On `IA_LockOn` press: perform a sphere overlap to find nearby `ACombatCharacter` enemies within a forward cone
-- [ ] Store the closest valid target as `TargetActor`
-- [ ] Each tick while locked: rotate the spring arm to face `TargetActor` using `FMath::RInterpTo`
-- [ ] On `IA_LockOn` press again (or target dies): clear `TargetActor` and restore free camera
-- [ ] Expose `LockOnRange` and `LockOnAngle` as editable Blueprint properties for tuning
+- [x] Create a C++ component `ULockOnComponent` and attach it to `ACombatCharacter`
+- [x] On `IA_LockOn` press: perform a sphere overlap to find nearby `ACombatCharacter` enemies within a forward cone
+- [x] Store the closest valid target as `TargetActor`
+- [x] Each tick while locked: rotate the spring arm to face `TargetActor` using `FMath::RInterpTo`
+- [x] On `IA_LockOn` press again (or target dies): clear `TargetActor` and restore free camera
+- [x] Expose `LockOnRange` and `LockOnAngle` as editable Blueprint properties for tuning
 
 ---
 
 ## Phase 3 — Attribute System (GAS)
+
+> Once GAS attributes are working, remove the template's `CurrentHP`, `MaxHP`, `LifeBarWidget`, `TakeDamage`, `HandleDeath`, `ResetHP`, and `ApplyDamage` from `ACombatCharacter` — these will all be handled by GAS effects and the attribute set going forward.
 
 ### UCombatAttributeSet (C++)
 - [ ] Create C++ class `UCombatAttributeSet` inheriting from `UAttributeSet`
