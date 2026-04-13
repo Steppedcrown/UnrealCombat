@@ -1,0 +1,588 @@
+{
+	"folders": [
+		{
+			"name": "UnrealCombat",
+			"path": "."
+		},
+		{
+			"name": "UE5",
+			"path": "/Users/Shared/Epic Games/UE_5.7"
+		}
+	],
+	"settings": {
+		"typescript.tsc.autoDetect": "off",
+		"npm.autoDetect": "off",
+		"terminal.integrated.env.mac": {
+			"PATH": "/Users/Shared/Epic Games/UE_5.7/Engine/Binaries/ThirdParty/DotNet/8.0.412/mac-arm64:${env:PATH}",
+			"DOTNET_ROOT": "/Users/Shared/Epic Games/UE_5.7/Engine/Binaries/ThirdParty/DotNet/8.0.412/mac-arm64",
+			"DOTNET_HOST_PATH": "/Users/Shared/Epic Games/UE_5.7/Engine/Binaries/ThirdParty/DotNet/8.0.412/mac-arm64/dotnet",
+			"DOTNET_MULTILEVEL_LOOKUP": "0",
+			"DOTNET_ROLL_FORWARD": "LatestMajor"
+		}
+	},
+	"extensions": {
+		"recommendations": [
+			"ms-vscode.cpptools",
+			"ms-dotnettools.csharp"
+		]
+	},
+	"tasks": {
+		"version": "2.0.0",
+		"tasks": [
+			{
+				"label": "UnrealCombat Mac Debug Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"UnrealCombat",
+					"Mac",
+					"Debug",
+					"/Users/aidenwaldorf/Developer/Personal/UnrealCombat/UnrealCombat.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "UnrealCombat Mac Debug Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"UnrealCombat",
+					"Mac",
+					"Debug",
+					"/Users/aidenwaldorf/Developer/Personal/UnrealCombat/UnrealCombat.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"UnrealCombat Mac Debug Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "UnrealCombat Mac Debug Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"UnrealCombat",
+					"Mac",
+					"Debug",
+					"/Users/aidenwaldorf/Developer/Personal/UnrealCombat/UnrealCombat.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "UnrealCombat Mac DebugGame Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"UnrealCombat",
+					"Mac",
+					"DebugGame",
+					"/Users/aidenwaldorf/Developer/Personal/UnrealCombat/UnrealCombat.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "UnrealCombat Mac DebugGame Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"UnrealCombat",
+					"Mac",
+					"DebugGame",
+					"/Users/aidenwaldorf/Developer/Personal/UnrealCombat/UnrealCombat.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"UnrealCombat Mac DebugGame Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "UnrealCombat Mac DebugGame Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"UnrealCombat",
+					"Mac",
+					"DebugGame",
+					"/Users/aidenwaldorf/Developer/Personal/UnrealCombat/UnrealCombat.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "UnrealCombat Mac Development Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"UnrealCombat",
+					"Mac",
+					"Development",
+					"/Users/aidenwaldorf/Developer/Personal/UnrealCombat/UnrealCombat.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "UnrealCombat Mac Development Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"UnrealCombat",
+					"Mac",
+					"Development",
+					"/Users/aidenwaldorf/Developer/Personal/UnrealCombat/UnrealCombat.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"UnrealCombat Mac Development Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "UnrealCombat Mac Development Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"UnrealCombat",
+					"Mac",
+					"Development",
+					"/Users/aidenwaldorf/Developer/Personal/UnrealCombat/UnrealCombat.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "UnrealCombat Mac Test Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"UnrealCombat",
+					"Mac",
+					"Test",
+					"/Users/aidenwaldorf/Developer/Personal/UnrealCombat/UnrealCombat.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "UnrealCombat Mac Test Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"UnrealCombat",
+					"Mac",
+					"Test",
+					"/Users/aidenwaldorf/Developer/Personal/UnrealCombat/UnrealCombat.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"UnrealCombat Mac Test Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "UnrealCombat Mac Test Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"UnrealCombat",
+					"Mac",
+					"Test",
+					"/Users/aidenwaldorf/Developer/Personal/UnrealCombat/UnrealCombat.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "UnrealCombat Mac Shipping Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"UnrealCombat",
+					"Mac",
+					"Shipping",
+					"/Users/aidenwaldorf/Developer/Personal/UnrealCombat/UnrealCombat.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "UnrealCombat Mac Shipping Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"UnrealCombat",
+					"Mac",
+					"Shipping",
+					"/Users/aidenwaldorf/Developer/Personal/UnrealCombat/UnrealCombat.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"UnrealCombat Mac Shipping Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "UnrealCombat Mac Shipping Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"UnrealCombat",
+					"Mac",
+					"Shipping",
+					"/Users/aidenwaldorf/Developer/Personal/UnrealCombat/UnrealCombat.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "UnrealCombatEditor Mac Debug Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"UnrealCombatEditor",
+					"Mac",
+					"Debug",
+					"/Users/aidenwaldorf/Developer/Personal/UnrealCombat/UnrealCombat.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "UnrealCombatEditor Mac Debug Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"UnrealCombatEditor",
+					"Mac",
+					"Debug",
+					"/Users/aidenwaldorf/Developer/Personal/UnrealCombat/UnrealCombat.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"UnrealCombatEditor Mac Debug Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "UnrealCombatEditor Mac Debug Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"UnrealCombatEditor",
+					"Mac",
+					"Debug",
+					"/Users/aidenwaldorf/Developer/Personal/UnrealCombat/UnrealCombat.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "UnrealCombatEditor Mac DebugGame Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"UnrealCombatEditor",
+					"Mac",
+					"DebugGame",
+					"/Users/aidenwaldorf/Developer/Personal/UnrealCombat/UnrealCombat.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "UnrealCombatEditor Mac DebugGame Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"UnrealCombatEditor",
+					"Mac",
+					"DebugGame",
+					"/Users/aidenwaldorf/Developer/Personal/UnrealCombat/UnrealCombat.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"UnrealCombatEditor Mac DebugGame Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "UnrealCombatEditor Mac DebugGame Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"UnrealCombatEditor",
+					"Mac",
+					"DebugGame",
+					"/Users/aidenwaldorf/Developer/Personal/UnrealCombat/UnrealCombat.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "UnrealCombatEditor Mac Development Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"UnrealCombatEditor",
+					"Mac",
+					"Development",
+					"/Users/aidenwaldorf/Developer/Personal/UnrealCombat/UnrealCombat.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "UnrealCombatEditor Mac Development Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"UnrealCombatEditor",
+					"Mac",
+					"Development",
+					"/Users/aidenwaldorf/Developer/Personal/UnrealCombat/UnrealCombat.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"UnrealCombatEditor Mac Development Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "UnrealCombatEditor Mac Development Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"UnrealCombatEditor",
+					"Mac",
+					"Development",
+					"/Users/aidenwaldorf/Developer/Personal/UnrealCombat/UnrealCombat.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			}
+		]
+	},
+	"launch": {
+		"version": "0.2.0",
+		"configurations": [
+			{
+				"name": "Launch UnrealCombat (Debug)",
+				"request": "launch",
+				"program": "/Users/aidenwaldorf/Developer/Personal/UnrealCombat/Binaries/Mac/UnrealGame-Mac-Debug.app/Contents/MacOS/UnrealGame-Mac-Debug",
+				"preLaunchTask": "UnrealCombat Mac Debug Build",
+				"args": [
+				],
+				"cwd": "/Users/Shared/Epic Games/UE_5.7",
+				"type": "lldb"
+			},
+			{
+				"name": "Launch UnrealCombat (DebugGame)",
+				"request": "launch",
+				"program": "/Users/aidenwaldorf/Developer/Personal/UnrealCombat/Binaries/Mac/UnrealGame-Mac-DebugGame.app/Contents/MacOS/UnrealGame-Mac-DebugGame",
+				"preLaunchTask": "UnrealCombat Mac DebugGame Build",
+				"args": [
+				],
+				"cwd": "/Users/Shared/Epic Games/UE_5.7",
+				"type": "lldb"
+			},
+			{
+				"name": "Launch UnrealCombat (Development)",
+				"request": "launch",
+				"program": "/Users/aidenwaldorf/Developer/Personal/UnrealCombat/Binaries/Mac/UnrealGame.app/Contents/MacOS/UnrealGame",
+				"preLaunchTask": "UnrealCombat Mac Development Build",
+				"args": [
+				],
+				"cwd": "/Users/Shared/Epic Games/UE_5.7",
+				"type": "lldb"
+			},
+			{
+				"name": "Launch UnrealCombat (Test)",
+				"request": "launch",
+				"program": "/Users/aidenwaldorf/Developer/Personal/UnrealCombat/Binaries/Mac/UnrealGame-Mac-Test.app/Contents/MacOS/UnrealGame-Mac-Test",
+				"preLaunchTask": "UnrealCombat Mac Test Build",
+				"args": [
+				],
+				"cwd": "/Users/Shared/Epic Games/UE_5.7",
+				"type": "lldb"
+			},
+			{
+				"name": "Launch UnrealCombat (Shipping)",
+				"request": "launch",
+				"program": "/Users/aidenwaldorf/Developer/Personal/UnrealCombat/Binaries/Mac/UnrealGame-Mac-Shipping.app/Contents/MacOS/UnrealGame-Mac-Shipping",
+				"preLaunchTask": "UnrealCombat Mac Shipping Build",
+				"args": [
+				],
+				"cwd": "/Users/Shared/Epic Games/UE_5.7",
+				"type": "lldb"
+			},
+			{
+				"name": "Launch UnrealCombatEditor (Debug)",
+				"request": "launch",
+				"program": "/Users/Shared/Epic Games/UE_5.7/Engine/Binaries/Mac/UnrealEditor-Mac-Debug.app/Contents/MacOS/UnrealEditor-Mac-Debug",
+				"preLaunchTask": "UnrealCombatEditor Mac Debug Build",
+				"args": [
+					"/Users/aidenwaldorf/Developer/Personal/UnrealCombat/UnrealCombat.uproject"
+				],
+				"cwd": "/Users/Shared/Epic Games/UE_5.7",
+				"type": "lldb"
+			},
+			{
+				"name": "Launch UnrealCombatEditor (DebugGame)",
+				"request": "launch",
+				"program": "/Users/Shared/Epic Games/UE_5.7/Engine/Binaries/Mac/UnrealEditor-Mac-DebugGame.app/Contents/MacOS/UnrealEditor-Mac-DebugGame",
+				"preLaunchTask": "UnrealCombatEditor Mac DebugGame Build",
+				"args": [
+					"/Users/aidenwaldorf/Developer/Personal/UnrealCombat/UnrealCombat.uproject"
+				],
+				"cwd": "/Users/Shared/Epic Games/UE_5.7",
+				"type": "lldb"
+			},
+			{
+				"name": "Launch UnrealCombatEditor (Development)",
+				"request": "launch",
+				"program": "/Users/Shared/Epic Games/UE_5.7/Engine/Binaries/Mac/UnrealEditor.app/Contents/MacOS/UnrealEditor",
+				"preLaunchTask": "UnrealCombatEditor Mac Development Build",
+				"args": [
+					"/Users/aidenwaldorf/Developer/Personal/UnrealCombat/UnrealCombat.uproject"
+				],
+				"cwd": "/Users/Shared/Epic Games/UE_5.7",
+				"type": "lldb"
+			},
+			{
+				"name": "Generate Project Files",
+				"type": "coreclr",
+				"request": "launch",
+				"preLaunchTask": "UnrealBuildTool Mac Development Build",
+				"program": "/Users/Shared/Epic Games/UE_5.7/Engine/Build/BatchFiles/RunUBT.bat",
+				"args": [
+					"-projectfiles",
+					"-vscode",
+					"-project=/Users/aidenwaldorf/Developer/Personal/UnrealCombat/UnrealCombat.uproject",
+					"-game",
+					"-engine",
+					"-dotnet"
+				],
+				"env": {
+					"PATH": "/Users/Shared/Epic Games/UE_5.7/Engine/Binaries/ThirdParty/DotNet/8.0.412/mac-arm64:${env:PATH}",
+					"DOTNET_ROOT": "/Users/Shared/Epic Games/UE_5.7/Engine/Binaries/ThirdParty/DotNet/8.0.412/mac-arm64",
+					"DOTNET_HOST_PATH": "/Users/Shared/Epic Games/UE_5.7/Engine/Binaries/ThirdParty/DotNet/8.0.412/mac-arm64/dotnet",
+					"DOTNET_MULTILEVEL_LOOKUP": "0",
+					"DOTNET_ROLL_FORWARD": "LatestMajor"
+				},
+				"console": "internalConsole",
+				"internalConsoleOptions": "openOnSessionStart",
+				"stopAtEntry": false,
+				"cwd": "/Users/Shared/Epic Games/UE_5.7"
+			}
+		]
+	}
+}

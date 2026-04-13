@@ -45,14 +45,14 @@ Specific step-by-step implementation plan for UnrealCombat. Mark steps as comple
 ## Phase 2 — Core Character & Movement
 
 ### ACombatCharacter (C++)
-- [ ] In Visual Studio / Rider, create a new C++ class `ACombatCharacter` inheriting from `ACharacter`
-- [ ] Add `UAbilitySystemComponent* AbilitySystemComponent` as a `UPROPERTY`
-- [ ] Add `UCombatAttributeSet* AttributeSet` as a `UPROPERTY`
-- [ ] Implement the `IAbilitySystemInterface` and return `AbilitySystemComponent` from `GetAbilitySystemComponent()`
-- [ ] Initialize both components in the constructor
-- [ ] Call `AbilitySystemComponent->InitAbilityActorInfo(this, this)` in `PossessedBy` (for player) and `OnRep_PlayerState` (for AI)
-- [ ] Create Blueprint `BP_Player` in `Content/Characters/` inheriting from `ACombatCharacter`
-- [ ] Create Blueprint `BP_Enemy` in `Content/Characters/` inheriting from `ACombatCharacter`
+- [x] In Visual Studio / Rider, create a new C++ class `ACombatCharacter` inheriting from `ACharacter`
+- [x] Add `UAbilitySystemComponent* AbilitySystemComponent` as a `UPROPERTY`
+- [x] Add `UCombatAttributeSet* AttributeSet` as a `UPROPERTY`
+- [x] Implement the `IAbilitySystemInterface` and return `AbilitySystemComponent` from `GetAbilitySystemComponent()`
+- [x] Initialize both components in the constructor
+- [x] Call `AbilitySystemComponent->InitAbilityActorInfo(this, this)` in `PossessedBy` (for player) and `OnRep_PlayerState` (for AI)
+- [x] Create Blueprint `BP_Player` in `Content/Characters/` inheriting from `ACombatCharacter`
+- [x] Create Blueprint `BP_Enemy` in `Content/Characters/` inheriting from `ACombatCharacter`
 
 ### Enhanced Input
 - [ ] Create an **Input Mapping Context** asset `IMC_Default` in `Content/Core/`

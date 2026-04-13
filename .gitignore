@@ -75,3 +75,6 @@ DerivedDataCache/*
 
 # macOS
 .DS_Store
+
+# VSCode generated files
+.vscode/
