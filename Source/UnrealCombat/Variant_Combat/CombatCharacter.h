@@ -76,6 +76,22 @@ protected:
 	UPROPERTY(EditAnywhere, Category ="Input")
 	UInputAction* ToggleCameraAction;
 
+	/** Block Input Action */
+	UPROPERTY(EditAnywhere, Category="Input")
+	UInputAction* BlockAction;
+
+	/** Expel Input Action */
+	UPROPERTY(EditAnywhere, Category="Input")
+	UInputAction* ExpelAction;
+
+	/** Rip Input Action */
+	UPROPERTY(EditAnywhere, Category="Input")
+	UInputAction* RipAction;
+
+	/** Lock-On Input Action */
+	UPROPERTY(EditAnywhere, Category="Input")
+	UInputAction* LockOnAction;
+
 	/** Max amount of HP the character will have on respawn */
 	UPROPERTY(EditAnywhere, Category="Damage", meta = (ClampMin = 0, ClampMax = 100))
 	float MaxHP = 5.0f;
@@ -233,6 +249,18 @@ protected:
 
 	/** Called for toggle camera side input */
 	void ToggleCamera();
+
+	/** Called for block input */
+	void BlockPressed();
+
+	/** Called for expel input */
+	void ExpelPressed();
+
+	/** Called for rip input */
+	void RipPressed();
+
+	/** Called for lock-on input */
+	void LockOnPressed();
 
 	/** BP hook to animate the camera side switch */
 	UFUNCTION(BlueprintImplementableEvent, Category="Combat")

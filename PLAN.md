@@ -74,7 +74,7 @@ The template already has `IA_Move`, `IA_Look`, `IA_Jump`, and attack actions. Ad
 - [x] Create `IA_Rip` (Digital)
 - [x] Create `IA_LockOn` (Digital)
 - [x] Add all four to the existing IMC with keyboard and controller bindings
-- [ ] Bind each to a stub handler in `SetupPlayerInputComponent()` (full ability wiring comes in Phase 5)
+- [x] Bind each to a stub handler in `SetupPlayerInputComponent()` (full ability wiring comes in Phase 5)
 
 ### Lock-On System
 - [ ] Create a C++ component `ULockOnComponent` and attach it to `ACombatCharacter`

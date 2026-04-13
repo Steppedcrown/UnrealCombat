@@ -118,6 +118,26 @@ void ACombatCharacter::ToggleCamera()
 	BP_ToggleCamera();
 }
 
+void ACombatCharacter::BlockPressed()
+{
+	// stub — full ability wiring comes in Phase 5
+}
+
+void ACombatCharacter::ExpelPressed()
+{
+	// stub — full ability wiring comes in Phase 5
+}
+
+void ACombatCharacter::RipPressed()
+{
+	// stub — full ability wiring comes in Phase 5
+}
+
+void ACombatCharacter::LockOnPressed()
+{
+	// stub — full ability wiring comes in Phase 5
+}
+
 void ACombatCharacter::DoMove(float Right, float Forward)
 {
 	if (GetController() != nullptr)
@@ -557,6 +577,18 @@ void ACombatCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 		// Camera Side Toggle
 		EnhancedInputComponent->BindAction(ToggleCameraAction, ETriggerEvent::Triggered, this, &ACombatCharacter::ToggleCamera);
+
+		// Block
+		EnhancedInputComponent->BindAction(BlockAction, ETriggerEvent::Started, this, &ACombatCharacter::BlockPressed);
+
+		// Expel
+		EnhancedInputComponent->BindAction(ExpelAction, ETriggerEvent::Started, this, &ACombatCharacter::ExpelPressed);
+
+		// Rip
+		EnhancedInputComponent->BindAction(RipAction, ETriggerEvent::Started, this, &ACombatCharacter::RipPressed);
+
+		// Lock-On
+		EnhancedInputComponent->BindAction(LockOnAction, ETriggerEvent::Started, this, &ACombatCharacter::LockOnPressed);
 	}
 }
 
