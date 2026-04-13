@@ -44,40 +44,37 @@ Specific step-by-step implementation plan for UnrealCombat. Mark steps as comple
 
 ## Phase 2 — Core Character & Movement
 
-### ACombatCharacter (C++)
-- [x] In Visual Studio / Rider, create a new C++ class `ACombatCharacter` inheriting from `ACharacter`
-- [x] Add `UAbilitySystemComponent* AbilitySystemComponent` as a `UPROPERTY`
-- [x] Add `UCombatAttributeSet* AttributeSet` as a `UPROPERTY`
-- [x] Implement the `IAbilitySystemInterface` and return `AbilitySystemComponent` from `GetAbilitySystemComponent()`
-- [x] Initialize both components in the constructor
-- [x] Call `AbilitySystemComponent->InitAbilityActorInfo(this, this)` in `PossessedBy` (for player) and `OnRep_PlayerState` (for AI)
-- [x] Create Blueprint `BP_Player` in `Content/Characters/` inheriting from `ACombatCharacter`
-- [x] Create Blueprint `BP_Enemy` in `Content/Characters/` inheriting from `ACombatCharacter`
+> The template's `Variant_Combat/ACombatCharacter` already provides camera, spring arm, movement, input bindings, combo/charged attack framework, HP, damage, death, and respawn. We extend it with GAS rather than replacing it.
 
-### Enhanced Input
-- [ ] Create an **Input Mapping Context** asset `IMC_Default` in `Content/Core/`
-- [ ] Create the following **Input Action** assets in `Content/Core/Input/`:
-  - [ ] `IA_Move` (Axis2D)
-  - [ ] `IA_Look` (Axis2D)
-  - [ ] `IA_Sprint` (Digital)
-  - [ ] `IA_Jump` (Digital)
-  - [ ] `IA_BasicAttack` (Digital)
-  - [ ] `IA_Block` (Digital)
-  - [ ] `IA_Expel` (Digital)
-  - [ ] `IA_Rip` (Digital)
-  - [ ] `IA_LockOn` (Digital)
-- [ ] Bind all Input Actions to keys/buttons in `IMC_Default` (WASD + mouse for keyboard, left stick + face buttons for controller)
-- [ ] In `ACombatCharacter::BeginPlay()`, add `IMC_Default` to the local player's Enhanced Input subsystem
-- [ ] Bind each Input Action to a handler function in `SetupPlayerInputComponent()`
+### ACombatCharacter — Add GAS (C++)
+- [x] In `Variant_Combat/CombatCharacter.h`, add `IAbilitySystemInterface` to the class inheritance
+- [x] Forward declare `UAbilitySystemComponent` and `UMotionWarpingComponent`
+- [x] Add `UAbilitySystemComponent* AbilitySystemComponent` as a private `UPROPERTY`
+- [x] Add `UMotionWarpingComponent* MotionWarpingComponent` as a private `UPROPERTY`
+- [x] Declare `GetAbilitySystemComponent()`, `PossessedBy()`, and `OnRep_PlayerState()`
+- [x] In `CombatCharacter.cpp`, include `AbilitySystemComponent.h` and `MotionWarpingComponent.h`
+- [x] Create both components in the constructor with `CreateDefaultSubobject`
+- [x] Implement `PossessedBy` and `OnRep_PlayerState` calling `AbilitySystemComponent->InitAbilityActorInfo(this, this)`
+- [ ] Compile and confirm the game runs without crashing
 
-### Movement
-- [ ] In `BP_Player`, verify walk and sprint work — set sprint speed in `CharacterMovementComponent` when `IA_Sprint` is held
-- [ ] Confirm jump works via `IA_Jump` bound to `ACharacter::Jump()`
-- [ ] Tune `MaxWalkSpeed` and `MaxSprintSpeed` values in the Blueprint defaults
+### Blueprints
+- [ ] Create Blueprint `BP_Player` in `Content/Characters/` inheriting from `ACombatCharacter`
+  - [ ] Assign skeletal mesh (use template mannequin temporarily)
+  - [ ] Assign existing template animation blueprint temporarily
+  - [ ] Assign all Input Actions from the template's input folder
+  - [ ] Assign the `LifeBar` widget class (use template's `WBP_CombatLifeBar` temporarily)
+- [ ] Create Blueprint `BP_Enemy` in `Content/Characters/` inheriting from `ACombatCharacter`
+- [ ] Set `BP_Player` as the Default Pawn in the Game Mode
+- [ ] Confirm the game launches and the character moves, jumps, and attacks correctly
 
-### Camera
-- [ ] Confirm the Third Person template's `SpringArmComponent` and `CameraComponent` are present on `BP_Player`
-- [ ] Tune spring arm length and camera lag for a comfortable third-person feel
+### New Input Actions
+The template already has `IA_Move`, `IA_Look`, `IA_Jump`, and attack actions. Add only what's missing:
+- [ ] Create `IA_Block` (Digital) in the template's input folder
+- [ ] Create `IA_Expel` (Digital)
+- [ ] Create `IA_Rip` (Digital)
+- [ ] Create `IA_LockOn` (Digital)
+- [ ] Add all four to the existing IMC with keyboard and controller bindings
+- [ ] Bind each to a stub handler in `SetupPlayerInputComponent()` (full ability wiring comes in Phase 5)
 
 ### Lock-On System
 - [ ] Create a C++ component `ULockOnComponent` and attach it to `ACombatCharacter`
@@ -90,6 +87,8 @@ Specific step-by-step implementation plan for UnrealCombat. Mark steps as comple
 ---
 
 ## Phase 3 — Attribute System (GAS)
+
+> Once GAS attributes are working, remove the template's `CurrentHP`, `MaxHP`, `LifeBarWidget`, `TakeDamage`, `HandleDeath`, `ResetHP`, and `ApplyDamage` from `ACombatCharacter` — these will all be handled by GAS effects and the attribute set going forward.
 
 ### UCombatAttributeSet (C++)
 - [ ] Create C++ class `UCombatAttributeSet` inheriting from `UAttributeSet`
