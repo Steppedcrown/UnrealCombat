@@ -135,16 +135,16 @@ Create the following Blueprint Gameplay Effects in `Content/Combat/Effects/`:
 
 ### Data Assets
 Create the following Data Asset instances in `Content/Combat/MoveData/`:
-- [ ] `DA_BasicAttack`
-- [ ] `DA_Block`
-- [ ] `DA_Expel`
-- [ ] `DA_Rip`
-- [ ] Fill in all fields for each asset (use placeholder values for now, tune later)
+- [x] `DA_BasicAttack`
+- [x] `DA_Block`
+- [x] `DA_Expel`
+- [x] `DA_Rip`
+- [x] Fill in all fields for each asset (use placeholder values for now, tune later)
 
 ### UCombatMoveRegistry
-- [ ] Create `UCombatMoveRegistry` as a `UDataAsset` with a `TMap<FGameplayTag, UCombatMoveData*>` property
-- [ ] Create an instance `DA_MoveRegistry` in `Content/Combat/` and populate it with all four moves mapped to their Gameplay Tags
-- [ ] Reference `DA_MoveRegistry` from `ACombatCharacter` as an editable property so abilities can look up move data at runtime
+- [x] Create `UCombatMoveRegistry` as a `UDataAsset` with a `TMap<FGameplayTag, UCombatMoveData*>` property
+- [x] Create an instance `DA_MoveRegistry` in `Content/Combat/` and populate it with all four moves mapped to their Gameplay Tags
+- [x] Reference `DA_MoveRegistry` from `ACombatCharacter` as an editable property so abilities can look up move data at runtime
 
 ---
 

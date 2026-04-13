@@ -20,6 +20,7 @@ class UAbilitySystemComponent;
 class UMotionWarpingComponent;
 class ULockOnComponent;
 class UCombatAttributeSet;
+class UCombatMoveRegistry;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogCombatCharacter, Log, All);
 
@@ -184,6 +185,10 @@ protected:
 	
 	/** If true, the charged attack hold check has been tested at least once */
 	bool bHasLoopedChargedAttack = false;
+
+	/** Move registry asset — maps ability tags to move data for runtime lookup by abilities */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Combat")
+	TObjectPtr<UCombatMoveRegistry> MoveRegistry;
 
 	/** Camera boom length while the character is dead */
 	UPROPERTY(EditAnywhere, Category="Camera", meta = (ClampMin = 0, ClampMax = 1000, Units = "cm"))
