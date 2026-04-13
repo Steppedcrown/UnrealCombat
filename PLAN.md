@@ -91,30 +91,30 @@ The template already has `IA_Move`, `IA_Look`, `IA_Jump`, and attack actions. Ad
 > Once GAS attributes are working, remove the template's `CurrentHP`, `MaxHP`, `LifeBarWidget`, `TakeDamage`, `HandleDeath`, `ResetHP`, and `ApplyDamage` from `ACombatCharacter` — these will all be handled by GAS effects and the attribute set going forward.
 
 ### UCombatAttributeSet (C++)
-- [ ] Create C++ class `UCombatAttributeSet` inheriting from `UAttributeSet`
-- [ ] Declare the following attributes using the `ATTRIBUTE_ACCESSORS` macro:
-  - [ ] `Health`, `MaxHealth`
-  - [ ] `Nodes`, `MaxNodes`
-  - [ ] `TempNodes`
-- [ ] Override `PostGameplayEffectExecute()` to:
-  - [ ] Clamp `Health` between `0` and `MaxHealth`
-  - [ ] Clamp `Nodes` between `0` and `MaxNodes`
-  - [ ] Clamp `TempNodes` to `>= 0` (no upper cap)
-  - [ ] When `Health` changes: recalculate `MaxNodes` (subtract 1 for every 20% threshold crossed below full health)
-  - [ ] When `Nodes` reaches `0`: apply `State.Status.Vulnerable` tag to the owner
-  - [ ] When `Nodes` goes above `0`: remove `State.Status.Vulnerable` tag
-  - [ ] When `Health` reaches `0`: apply `State.Status.Dead` tag
+- [x] Create C++ class `UCombatAttributeSet` inheriting from `UAttributeSet`
+- [x] Declare the following attributes using the `ATTRIBUTE_ACCESSORS` macro:
+  - [x] `Health`, `MaxHealth`
+  - [x] `Nodes`, `MaxNodes`
+  - [x] `TempNodes`
+- [x] Override `PostGameplayEffectExecute()` to:
+  - [x] Clamp `Health` between `0` and `MaxHealth`
+  - [x] Clamp `Nodes` between `0` and `MaxNodes`
+  - [x] Clamp `TempNodes` to `>= 0` (no upper cap)
+  - [x] When `Health` changes: recalculate `MaxNodes` (subtract 1 for every 20% threshold crossed below full health)
+  - [x] When `Nodes` reaches `0`: apply `State.Status.Vulnerable` tag to the owner
+  - [x] When `Nodes` goes above `0`: remove `State.Status.Vulnerable` tag
+  - [x] When `Health` reaches `0`: apply `State.Status.Dead` tag
 
 ### Gameplay Effects
 Create the following Blueprint Gameplay Effects in `Content/Combat/Effects/`:
-- [ ] `GE_DamageHealth` — Instant, modifies `Health` by `-Magnitude`
-- [ ] `GE_RestoreNode` — Instant, modifies `Nodes` by `+1`
-- [ ] `GE_ConsumeNode` — Instant, modifies `Nodes` by `-Magnitude`
-- [ ] `GE_ApplyTempNode` — Duration-based, adds to `TempNodes` for X seconds, removes on expiry
-- [ ] `GE_HealthThreshold` — Instant, modifies `MaxNodes` by `-1` (applied by attribute set logic at each threshold)
-- [ ] `GE_PassiveNodeRegen` — Periodic (every 1–2s), modifies `Nodes` by `+1`; apply only when `Nodes == 0` and player is near enemy (controlled via Gameplay Cue or tag condition)
-- [ ] `GE_Knockback` — Instant, triggers a Gameplay Cue that calls `LaunchCharacter` on the target
-- [ ] `GE_Kill` — Instant, sets `Health` to `0`
+- [x] `GE_DamageHealth` — Instant, modifies `Health` by `-Magnitude`
+- [x] `GE_RestoreNode` — Instant, modifies `Nodes` by `+1`
+- [x] `GE_ConsumeNode` — Instant, modifies `Nodes` by `-Magnitude`
+- [x] `GE_ApplyTempNode` — Duration-based, adds to `TempNodes` for X seconds, removes on expiry
+- [x] `GE_HealthThreshold` — Instant, modifies `MaxNodes` by `-1` (applied by attribute set logic at each threshold)
+- [x] `GE_PassiveNodeRegen` — Periodic (every 1–2s), modifies `Nodes` by `+1`; apply only when `Nodes == 0` and player is near enemy (controlled via Gameplay Cue or tag condition)
+- [x] `GE_Knockback` — Instant, triggers a Gameplay Cue that calls `LaunchCharacter` on the target
+- [x] `GE_Kill` — Instant, sets `Health` to `0`
 
 ---
 

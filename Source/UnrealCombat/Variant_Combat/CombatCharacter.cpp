@@ -18,6 +18,7 @@
 #include "AbilitySystemComponent.h"
 #include "MotionWarpingComponent.h"
 #include "LockOnComponent.h"
+#include "CombatAttributeSet.h"
 
 UAbilitySystemComponent* ACombatCharacter::GetAbilitySystemComponent() const
 {
@@ -79,6 +80,9 @@ ACombatCharacter::ACombatCharacter()
 
 	// create the lock-on component
 	LockOnComponent = CreateDefaultSubobject<ULockOnComponent>(TEXT("LockOnComponent"));
+
+	// create the attribute set — registering it as a subobject is enough for the ASC to discover it
+	AttributeSet = CreateDefaultSubobject<UCombatAttributeSet>(TEXT("AttributeSet"));
 }
 
 void ACombatCharacter::Move(const FInputActionValue& Value)
