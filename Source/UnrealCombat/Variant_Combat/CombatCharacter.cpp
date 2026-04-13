@@ -19,6 +19,7 @@
 #include "MotionWarpingComponent.h"
 #include "LockOnComponent.h"
 #include "CombatAttributeSet.h"
+#include "CombatMoveRegistry.h"
 
 UAbilitySystemComponent* ACombatCharacter::GetAbilitySystemComponent() const
 {
