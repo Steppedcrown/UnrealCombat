@@ -22,7 +22,7 @@ Specific step-by-step implementation plan for UnrealCombat. Mark steps as comple
 - [x] Enable **Motion Warping**
 - [x] Confirm **Enhanced Input** is enabled (on by default in UE5.1+)
 - [x] Restart the editor after enabling plugins
-- [ ] In `UnrealCombat.Build.cs`, add to `PublicDependencyModuleNames`:
+- [x] In `UnrealCombat.Build.cs`, add to `PublicDependencyModuleNames`:
   - `"GameplayAbilities"`, `"GameplayTasks"`, `"GameplayTags"`, `"MotionWarping"`
 
 ### Gameplay Tags
