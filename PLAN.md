@@ -26,19 +26,19 @@ Specific step-by-step implementation plan for UnrealCombat. Mark steps as comple
   - `"GameplayAbilities"`, `"GameplayTasks"`, `"GameplayTags"`, `"MotionWarping"`
 
 ### Gameplay Tags
-- [ ] Open **Edit > Project Settings > GameplayTags** and add a new tag source file `GameplayTags.ini`
-- [ ] Add the following tags:
-  - [ ] `State.Combat.Blocking`
-  - [ ] `State.Combat.Attacking`
-  - [ ] `State.Status.Vulnerable`
-  - [ ] `State.Status.Dead`
-  - [ ] `Ability.BasicAttack`
-  - [ ] `Ability.Block`
-  - [ ] `Ability.Expel`
-  - [ ] `Ability.Rip`
-  - [ ] `Effect.TempNode`
-  - [ ] `Effect.Knockback`
-  - [ ] `Effect.HitStop`
+- [x] Open **Edit > Project Settings > GameplayTags** and add a new tag source file `GameplayTags.ini`
+- [x] Add the following tags:
+  - [x] `State.Combat.Blocking`
+  - [x] `State.Combat.Attacking`
+  - [x] `State.Status.Vulnerable`
+  - [x] `State.Status.Dead`
+  - [x] `Ability.BasicAttack`
+  - [x] `Ability.Block`
+  - [x] `Ability.Expel`
+  - [x] `Ability.Rip`
+  - [x] `Effect.TempNode`
+  - [x] `Effect.Knockback`
+  - [x] `Effect.HitStop`
 
 ---
 
