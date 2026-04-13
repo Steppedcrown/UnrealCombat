@@ -107,14 +107,14 @@ The template already has `IA_Move`, `IA_Look`, `IA_Jump`, and attack actions. Ad
 
 ### Gameplay Effects
 Create the following Blueprint Gameplay Effects in `Content/Combat/Effects/`:
-- [ ] `GE_DamageHealth` — Instant, modifies `Health` by `-Magnitude`
-- [ ] `GE_RestoreNode` — Instant, modifies `Nodes` by `+1`
-- [ ] `GE_ConsumeNode` — Instant, modifies `Nodes` by `-Magnitude`
-- [ ] `GE_ApplyTempNode` — Duration-based, adds to `TempNodes` for X seconds, removes on expiry
-- [ ] `GE_HealthThreshold` — Instant, modifies `MaxNodes` by `-1` (applied by attribute set logic at each threshold)
-- [ ] `GE_PassiveNodeRegen` — Periodic (every 1–2s), modifies `Nodes` by `+1`; apply only when `Nodes == 0` and player is near enemy (controlled via Gameplay Cue or tag condition)
-- [ ] `GE_Knockback` — Instant, triggers a Gameplay Cue that calls `LaunchCharacter` on the target
-- [ ] `GE_Kill` — Instant, sets `Health` to `0`
+- [x] `GE_DamageHealth` — Instant, modifies `Health` by `-Magnitude`
+- [x] `GE_RestoreNode` — Instant, modifies `Nodes` by `+1`
+- [x] `GE_ConsumeNode` — Instant, modifies `Nodes` by `-Magnitude`
+- [x] `GE_ApplyTempNode` — Duration-based, adds to `TempNodes` for X seconds, removes on expiry
+- [x] `GE_HealthThreshold` — Instant, modifies `MaxNodes` by `-1` (applied by attribute set logic at each threshold)
+- [x] `GE_PassiveNodeRegen` — Periodic (every 1–2s), modifies `Nodes` by `+1`; apply only when `Nodes == 0` and player is near enemy (controlled via Gameplay Cue or tag condition)
+- [x] `GE_Knockback` — Instant, triggers a Gameplay Cue that calls `LaunchCharacter` on the target
+- [x] `GE_Kill` — Instant, sets `Health` to `0`
 
 ---
 
