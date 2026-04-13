@@ -17,6 +17,7 @@
 #include "CombatPlayerController.h"
 #include "AbilitySystemComponent.h"
 #include "MotionWarpingComponent.h"
+#include "LockOnComponent.h"
 
 UAbilitySystemComponent* ACombatCharacter::GetAbilitySystemComponent() const
 {
@@ -138,7 +139,7 @@ void ACombatCharacter::RipPressed()
 
 void ACombatCharacter::LockOnPressed()
 {
-	// stub — full ability wiring comes in Phase 5
+	LockOnComponent->ToggleLockOn();
 }
 
 void ACombatCharacter::DoMove(float Right, float Forward)

@@ -18,6 +18,7 @@ class UCombatLifeBar;
 class UWidgetComponent;
 class UAbilitySystemComponent;
 class UMotionWarpingComponent;
+class ULockOnComponent;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogCombatCharacter, Log, All);
 

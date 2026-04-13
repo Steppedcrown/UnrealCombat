@@ -78,11 +78,11 @@ The template already has `IA_Move`, `IA_Look`, `IA_Jump`, and attack actions. Ad
 
 ### Lock-On System
 - [x] Create a C++ component `ULockOnComponent` and attach it to `ACombatCharacter`
-- [ ] On `IA_LockOn` press: perform a sphere overlap to find nearby `ACombatCharacter` enemies within a forward cone
-- [ ] Store the closest valid target as `TargetActor`
-- [ ] Each tick while locked: rotate the spring arm to face `TargetActor` using `FMath::RInterpTo`
-- [ ] On `IA_LockOn` press again (or target dies): clear `TargetActor` and restore free camera
-- [ ] Expose `LockOnRange` and `LockOnAngle` as editable Blueprint properties for tuning
+- [x] On `IA_LockOn` press: perform a sphere overlap to find nearby `ACombatCharacter` enemies within a forward cone
+- [x] Store the closest valid target as `TargetActor`
+- [x] Each tick while locked: rotate the spring arm to face `TargetActor` using `FMath::RInterpTo`
+- [x] On `IA_LockOn` press again (or target dies): clear `TargetActor` and restore free camera
+- [x] Expose `LockOnRange` and `LockOnAngle` as editable Blueprint properties for tuning
 
 ---
 
