@@ -201,8 +201,8 @@ Create the following Data Asset instances in `Content/Combat/MoveData/`:
 - [x] Retarget animations to the project skeleton if needed using UE5's IK Retargeter
 
 ### Animation Blueprint
-- [ ] Create `ABP_CombatCharacter` in `Content/Animations/` using the character skeleton
-- [ ] Create Linked Anim Layer interface `ALI_CombatCharacter` with two layers: `LocomotionLayer`, `CombatLayer`
+- [x] Create `ABP_CombatCharacter` in `Content/Animations/` using the character skeleton
+- [x] Create Linked Anim Layer interface `ALI_CombatCharacter` with two layers: `LocomotionLayer`, `CombatLayer`
 - [ ] Create `ABL_Locomotion` implementing `LocomotionLayer`:
   - [ ] Blend walk/sprint/idle using speed from `CharacterMovementComponent`
   - [ ] Handle jump (in-air blend)
