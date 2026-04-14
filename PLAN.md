@@ -162,14 +162,14 @@ Create the following Data Asset instances in `Content/Combat/MoveData/`:
 - [x] Create Blueprint child `BP_GA_BasicAttack` in `Content/Combat/Abilities/`
 
 ### UGA_Block
-- [ ] Create C++ class `UGA_Block` inheriting from `UGameplayAbility`
-- [ ] On activation: apply `State.Combat.Blocking` tag, start a timer for the block window (~1 second)
-- [ ] While `State.Combat.Blocking` is active: intercept incoming `GE_DamageHealth` in `PostGameplayEffectExecute` and negate it
-- [ ] Detect perfect block: record timestamp of `IA_Block` input; if an incoming hit arrives within N frames of that timestamp, trigger perfect block logic
+- [x] Create C++ class `UGA_Block` inheriting from `UGameplayAbility`
+- [x] On activation: apply `State.Combat.Blocking` tag, start a timer for the block window (~1 second)
+- [x] While `State.Combat.Blocking` is active: intercept incoming `GE_DamageHealth` in `PostGameplayEffectExecute` and negate it
+- [x] Detect perfect block: record timestamp of `IA_Block` input; if an incoming hit arrives within N frames of that timestamp, trigger perfect block logic
   - Apply `GE_RestoreNode` to self
   - Apply `GE_Knockback` to all enemies within radius
-- [ ] After block window: remove `State.Combat.Blocking`, apply cooldown
-- [ ] Create Blueprint child `BP_GA_Block` in `Content/Combat/Abilities/`
+- [x] After block window: remove `State.Combat.Blocking`, apply cooldown
+- [x] Create Blueprint child `BP_GA_Block` in `Content/Combat/Abilities/`
 
 ### UGA_Expel
 - [ ] Create C++ class `UGA_Expel` inheriting from `UGameplayAbility`
