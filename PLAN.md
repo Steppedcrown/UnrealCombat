@@ -343,6 +343,9 @@ Create in `Content/Core/CameraShakes/`:
 - [ ] In the `GE_Knockback` Gameplay Cue: call `LaunchCharacter()` on the target with a directional impulse away from the caster
 - [ ] Expose knockback force as a field on `UCombatMoveData` so it can be tuned per move
 
+### Input Buffering
+- [ ] Consider implementing based on how inputs feel
+
 ---
 
 ## Phase 11 — Enemy AI
