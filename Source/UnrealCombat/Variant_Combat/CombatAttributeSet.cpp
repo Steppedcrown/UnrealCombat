@@ -3,6 +3,7 @@
 #include "CombatAttributeSet.h"
 #include "GameplayEffectExtension.h"
 #include "AbilitySystemComponent.h"
+#include "AbilitySystemBlueprintLibrary.h"
 
 UCombatAttributeSet::UCombatAttributeSet()
 {
@@ -25,6 +26,26 @@ void UCombatAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 
 	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
 	{
+		// If this is incoming damage (negative modifier) and the owner is blocking,
+		// negate the change and fire an event so UGA_Block can detect a perfect block.
+		const FGameplayTag BlockingTag = FGameplayTag::RequestGameplayTag(FName("State.Combat.Blocking"));
+		if (Data.EvaluatedData.Magnitude < 0.0f && ASC->HasMatchingGameplayTag(BlockingTag))
+		{
+			// Restore health to its pre-effect value
+			const float RestoredHealth = FMath::Clamp(GetHealth() - Data.EvaluatedData.Magnitude, 0.0f, GetMaxHealth());
+			SetHealth(RestoredHealth);
+
+			// Notify UGA_Block that a hit was absorbed so it can check the perfect block window
+			const FGameplayTag BlockHitTag = FGameplayTag::RequestGameplayTag(FName("Event.Block.Hit"), /*bErrorIfNotFound=*/false);
+			if (BlockHitTag.IsValid())
+			{
+				FGameplayEventData BlockedPayload;
+				BlockedPayload.Instigator = Data.EffectSpec.GetEffectContext().GetInstigator();
+				ASC->HandleGameplayEvent(BlockHitTag, &BlockedPayload);
+			}
+			return;
+		}
+
 		// clamp health
 		SetHealth(FMath::Clamp(GetHealth(), 0.0f, GetMaxHealth()));
 

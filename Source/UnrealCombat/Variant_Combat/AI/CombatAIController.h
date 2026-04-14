@@ -6,22 +6,16 @@
 #include "AIController.h"
 #include "CombatAIController.generated.h"
 
-class UStateTreeAIComponent;
-
 /**
- *	A basic AI Controller capable of running StateTree
+ *  Base AI Controller for combat characters.
+ *  Phase 11 adds Behavior Tree execution and Blackboard setup here.
  */
 UCLASS(abstract)
 class ACombatAIController : public AAIController
 {
 	GENERATED_BODY()
 
-	/** StateTree Component */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
-	UStateTreeAIComponent* StateTreeAI;
-
 public:
 
-	/** Constructor */
 	ACombatAIController();
 };

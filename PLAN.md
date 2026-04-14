@@ -153,43 +153,43 @@ Create the following Data Asset instances in `Content/Combat/MoveData/`:
 > Each ability follows this pattern: C++ base class with core logic → Blueprint child for montage/data wiring
 
 ### UGA_BasicAttack
-- [ ] Create C++ class `UGA_BasicAttack` inheriting from `UGameplayAbility`
-- [ ] In `ActivateAbility()`: look up `DA_BasicAttack` from the registry and play its `AnimationMontage` via `UAbilityTask_PlayMontageAndWait`
-- [ ] Use `UAbilityTask_WaitGameplayEvent` to listen for the `NotifyState_ActiveFrames` window
-- [ ] During active frames: trigger hit detection via `UCombatHitDetectionComponent`
-- [ ] On hit: apply `GE_DamageHealth` to target, apply `GE_RestoreNode` to self
-- [ ] Apply and clear `State.Combat.Attacking` tag for the duration
-- [ ] Create Blueprint child `BP_GA_BasicAttack` in `Content/Combat/Abilities/`
+- [x] Create C++ class `UGA_BasicAttack` inheriting from `UGameplayAbility`
+- [x] In `ActivateAbility()`: look up `DA_BasicAttack` from the registry and play its `AnimationMontage` via `UAbilityTask_PlayMontageAndWait`
+- [x] Use `UAbilityTask_WaitGameplayEvent` to listen for the `NotifyState_ActiveFrames` window
+- [x] During active frames: trigger hit detection via `UCombatHitDetectionComponent`
+- [x] On hit: apply `GE_DamageHealth` to target, apply `GE_RestoreNode` to self
+- [x] Apply and clear `State.Combat.Attacking` tag for the duration
+- [x] Create Blueprint child `BP_GA_BasicAttack` in `Content/Combat/Abilities/`
 
 ### UGA_Block
-- [ ] Create C++ class `UGA_Block` inheriting from `UGameplayAbility`
-- [ ] On activation: apply `State.Combat.Blocking` tag, start a timer for the block window (~1 second)
-- [ ] While `State.Combat.Blocking` is active: intercept incoming `GE_DamageHealth` in `PostGameplayEffectExecute` and negate it
-- [ ] Detect perfect block: record timestamp of `IA_Block` input; if an incoming hit arrives within N frames of that timestamp, trigger perfect block logic
+- [x] Create C++ class `UGA_Block` inheriting from `UGameplayAbility`
+- [x] On activation: apply `State.Combat.Blocking` tag, start a timer for the block window (~1 second)
+- [x] While `State.Combat.Blocking` is active: intercept incoming `GE_DamageHealth` in `PostGameplayEffectExecute` and negate it
+- [x] Detect perfect block: record timestamp of `IA_Block` input; if an incoming hit arrives within N frames of that timestamp, trigger perfect block logic
   - Apply `GE_RestoreNode` to self
   - Apply `GE_Knockback` to all enemies within radius
-- [ ] After block window: remove `State.Combat.Blocking`, apply cooldown
-- [ ] Create Blueprint child `BP_GA_Block` in `Content/Combat/Abilities/`
+- [x] After block window: remove `State.Combat.Blocking`, apply cooldown
+- [x] Create Blueprint child `BP_GA_Block` in `Content/Combat/Abilities/`
 
 ### UGA_Expel
-- [ ] Create C++ class `UGA_Expel` inheriting from `UGameplayAbility`
-- [ ] In `CanActivateAbility()`: check that caster has enough Nodes (>= `NodeCost` from move data)
-- [ ] On activation: apply `GE_ConsumeNode` to self, play montage, run hit detection
-- [ ] On hit: apply `GE_DamageHealth` to target, apply `GE_ApplyTempNode` to target
-- [ ] Create Blueprint child `BP_GA_Expel` in `Content/Combat/Abilities/`
+- [x] Create C++ class `UGA_Expel` inheriting from `UGameplayAbility`
+- [x] In `CanActivateAbility()`: check that caster has enough Nodes (>= `NodeCost` from move data)
+- [x] On activation: apply `GE_ConsumeNode` to self, play montage, run hit detection
+- [x] On hit: apply `GE_DamageHealth` to target, apply `GE_ApplyTempNode` to target
+- [x] Create Blueprint child `BP_GA_Expel` in `Content/Combat/Abilities/`
 
 ### UGA_Rip
-- [ ] Create C++ class `UGA_Rip` inheriting from `UGameplayAbility`
-- [ ] In `CanActivateAbility()`: check that caster has enough Nodes
-- [ ] On activation: apply `GE_ConsumeNode` to self
-- [ ] Check if target has `State.Status.Vulnerable` tag:
+- [x] Create C++ class `UGA_Rip` inheriting from `UGameplayAbility`
+- [x] In `CanActivateAbility()`: check that caster has enough Nodes
+- [x] On activation: apply `GE_ConsumeNode` to self
+- [x] Check if target has `State.Status.Vulnerable` tag:
   - **No:** play normal Rip montage, on hit apply `GE_DamageHealth` (minor) and transfer Nodes (apply `GE_ConsumeNode` on target, `GE_RestoreNode` on self for each stolen Node)
   - **Yes:** set Motion Warping target to enemy, play execution montage, on completion apply `GE_Kill` to target
-- [ ] Create Blueprint child `BP_GA_Rip` in `Content/Combat/Abilities/`
+- [x] Create Blueprint child `BP_GA_Rip` in `Content/Combat/Abilities/`
 
 ### Grant Abilities
-- [ ] In `ACombatCharacter::PossessedBy()`, grant all four abilities to the ASC using `GiveAbility()`
-- [ ] Bind each `IA_*` input action to its corresponding ability's activation tag
+- [x] In `ACombatCharacter::PossessedBy()`, grant all four abilities to the ASC using `GiveAbility()`
+- [x] Bind each `IA_*` input action to its corresponding ability's activation tag
 
 ---
 
@@ -211,13 +211,19 @@ Create the following Data Asset instances in `Content/Combat/MoveData/`:
 - [ ] In `ABP_CombatCharacter`, link both layers using `LinkedAnimLayer` nodes
 - [ ] Assign `ABP_CombatCharacter` to the `SkeletalMeshComponent` on `BP_Player` and `BP_Enemy`
 
+### ANS_ActiveFrames (Blueprint Anim Notify State)
+- [ ] Create Blueprint class `ANS_ActiveFrames` in `Content/Animations/` inheriting from `AnimNotifyState`
+- [ ] In `NotifyBegin`: call `UAbilitySystemBlueprintLibrary::SendGameplayEventToActor` on `MeshComp`'s owner, passing tag `Event.ActiveFrames.Begin`
+- [ ] In `NotifyEnd`: same call with tag `Event.ActiveFrames.End`
+- [ ] Add `Event.ActiveFrames.Begin` and `Event.ActiveFrames.End` to Project Settings → GameplayTags
+
 ### Animation Montages
 Create in `Content/Animations/Montages/`:
-- [ ] `AM_BasicAttack` — add `NotifyState_ActiveFrames`, `AnimNotify_SpawnHitEffect`, `AnimNotify_PlayHitSound`
+- [ ] `AM_BasicAttack` — place `ANS_ActiveFrames` notify state over the active hit window; add `AnimNotify_SpawnHitEffect`, `AnimNotify_PlayHitSound`
 - [ ] `AM_Block` — add notify for block window start/end
 - [ ] `AM_PerfectBlock` — add `AnimNotify_SpawnHitEffect`, camera shake trigger
-- [ ] `AM_Expel` — add `NotifyState_ActiveFrames`, `AnimNotify_SpawnHitEffect`, `AnimNotify_PlayHitSound`
-- [ ] `AM_Rip_Normal` — add `NotifyState_ActiveFrames`, `AnimNotify_SpawnHitEffect`
+- [ ] `AM_Expel` — place `ANS_ActiveFrames` notify state over the active hit window; add `AnimNotify_SpawnHitEffect`, `AnimNotify_PlayHitSound`
+- [ ] `AM_Rip_Normal` — place `ANS_ActiveFrames` notify state over the active hit window; add `AnimNotify_SpawnHitEffect`
 - [ ] `AM_Rip_Execution` — add `AnimNotify_EnableMotionWarping`, `AnimNotify_SpawnHitEffect`, `AnimNotify_PlayHitSound`
 
 ### Motion Warping
@@ -336,6 +342,9 @@ Create in `Content/Core/CameraShakes/`:
 ### Knockback
 - [ ] In the `GE_Knockback` Gameplay Cue: call `LaunchCharacter()` on the target with a directional impulse away from the caster
 - [ ] Expose knockback force as a field on `UCombatMoveData` so it can be tuned per move
+
+### Input Buffering
+- [ ] Consider implementing based on how inputs feel
 
 ---
 

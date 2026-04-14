@@ -16,10 +16,13 @@
 #include "Engine/LocalPlayer.h"
 #include "CombatPlayerController.h"
 #include "AbilitySystemComponent.h"
+#include "Abilities/GameplayAbility.h"
 #include "MotionWarpingComponent.h"
 #include "LockOnComponent.h"
 #include "CombatAttributeSet.h"
 #include "CombatMoveRegistry.h"
+
+DEFINE_LOG_CATEGORY(LogCombatCharacter);
 
 UAbilitySystemComponent* ACombatCharacter::GetAbilitySystemComponent() const
 {
@@ -30,6 +33,19 @@ void ACombatCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
+
+	// Grant all combat abilities — Blueprint children are assigned in BP_Player / BP_Enemy
+	for (TSubclassOf<UGameplayAbility> AbilityClass : {
+		BasicAttackAbilityClass,
+		BlockAbilityClass,
+		ExpelAbilityClass,
+		RipAbilityClass })
+	{
+		if (AbilityClass)
+		{
+			AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(AbilityClass, 1));
+		}
+	}
 }
 
 void ACombatCharacter::OnRep_PlayerState()
@@ -129,17 +145,23 @@ void ACombatCharacter::ToggleCamera()
 
 void ACombatCharacter::BlockPressed()
 {
-	// stub — full ability wiring comes in Phase 5
+	FGameplayTagContainer Tags;
+	Tags.AddTag(FGameplayTag::RequestGameplayTag(FName("Ability.Block")));
+	AbilitySystemComponent->TryActivateAbilitiesByTag(Tags);
 }
 
 void ACombatCharacter::ExpelPressed()
 {
-	// stub — full ability wiring comes in Phase 5
+	FGameplayTagContainer Tags;
+	Tags.AddTag(FGameplayTag::RequestGameplayTag(FName("Ability.Expel")));
+	AbilitySystemComponent->TryActivateAbilitiesByTag(Tags);
 }
 
 void ACombatCharacter::RipPressed()
 {
-	// stub — full ability wiring comes in Phase 5
+	FGameplayTagContainer Tags;
+	Tags.AddTag(FGameplayTag::RequestGameplayTag(FName("Ability.Rip")));
+	AbilitySystemComponent->TryActivateAbilitiesByTag(Tags);
 }
 
 void ACombatCharacter::LockOnPressed()
@@ -179,16 +201,27 @@ void ACombatCharacter::DoLook(float Yaw, float Pitch)
 
 void ACombatCharacter::DoComboAttackStart()
 {
-	// are we already playing an attack animation?
-	if (bIsAttacking)
+	FGameplayTagContainer Tags;
+	Tags.AddTag(FGameplayTag::RequestGameplayTag(FName("Ability.BasicAttack")));
+	if (AbilitySystemComponent->TryActivateAbilitiesByTag(Tags))
 	{
-		// cache the input time so we can check it later
-		CachedAttackInputTime = GetWorld()->GetTimeSeconds();
-
 		return;
 	}
 
-	// perform a combo attack
+	// Fallback to legacy template combo system if the GAS ability isn't granted yet
+	if (bIsAttacking)
+	{
+		// Buffer the input timestamp
+		CachedAttackInputTime = GetWorld()->GetTimeSeconds();
+
+		// If the combo window is already open, chain immediately rather than waiting
+		if (bComboWindowOpen)
+		{
+			CheckCombo();
+		}
+		return;
+	}
+
 	ComboAttack();
 }
 
@@ -229,9 +262,6 @@ void ACombatCharacter::ResetHP()
 {
 	// reset the current HP total
 	CurrentHP = MaxHP;
-
-	// update the life bar
-	LifeBarWidget->SetLifePercentage(1.0f);
 }
 
 void ACombatCharacter::ComboAttack()
@@ -394,6 +424,22 @@ void ACombatCharacter::CheckChargedAttack()
 	}
 }
 
+void ACombatCharacter::OpenComboWindow()
+{
+	bComboWindowOpen = true;
+
+	// If the player already buffered an input before the window opened, chain immediately
+	if (CachedAttackInputTime > 0.0f)
+	{
+		CheckCombo();
+	}
+}
+
+void ACombatCharacter::CloseComboWindow()
+{
+	bComboWindowOpen = false;
+}
+
 void ACombatCharacter::NotifyEnemiesOfIncomingAttack()
 {
 	// sweep for objects in front of the character to be hit by the attack
@@ -510,9 +556,6 @@ float ACombatCharacter::TakeDamage(float Damage, struct FDamageEvent const& Dama
 	}
 	else
 	{
-		// update the life bar
-		LifeBarWidget->SetLifePercentage(CurrentHP / MaxHP);
-
 		// enable partial ragdoll physics, but keep the pelvis vertical
 		GetMesh()->SetPhysicsBlendWeight(0.5f);
 		GetMesh()->SetBodySimulatePhysics(PelvisBoneName, false);
@@ -538,18 +581,14 @@ void ACombatCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// get the life bar from the widget component
-	LifeBarWidget = Cast<UCombatLifeBar>(LifeBar->GetUserWidgetObject());
-	check(LifeBarWidget);
-
 	// initialize the camera
-	GetCameraBoom()->TargetArmLength = DefaultCameraDistance;
+	if (CameraBoom)
+	{
+		CameraBoom->TargetArmLength = DefaultCameraDistance;
+	}
 
 	// save the relative transform for the mesh so we can reset the ragdoll later
 	MeshStartingTransform = GetMesh()->GetRelativeTransform();
-
-	// set the life bar color
-	LifeBarWidget->SetBarColor(LifeBarColor);
 
 	// reset HP to maximum
 	ResetHP();
