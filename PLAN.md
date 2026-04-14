@@ -212,10 +212,10 @@ Create the following Data Asset instances in `Content/Combat/MoveData/`:
 - [x] Assign `ABP_CombatCharacter` to the `SkeletalMeshComponent` on `BP_Player` and `BP_Enemy`
 
 ### ANS_ActiveFrames (Blueprint Anim Notify State)
-- [ ] Create Blueprint class `ANS_ActiveFrames` in `Content/Animations/` inheriting from `AnimNotifyState`
-- [ ] In `NotifyBegin`: call `UAbilitySystemBlueprintLibrary::SendGameplayEventToActor` on `MeshComp`'s owner, passing tag `Event.ActiveFrames.Begin`
-- [ ] In `NotifyEnd`: same call with tag `Event.ActiveFrames.End`
-- [ ] Add `Event.ActiveFrames.Begin` and `Event.ActiveFrames.End` to Project Settings → GameplayTags
+- [x] Create Blueprint class `ANS_ActiveFrames` in `Content/Animations/` inheriting from `AnimNotifyState`
+- [x] In `NotifyBegin`: call `UAbilitySystemBlueprintLibrary::SendGameplayEventToActor` on `MeshComp`'s owner, passing tag `Event.ActiveFrames.Begin`
+- [x] In `NotifyEnd`: same call with tag `Event.ActiveFrames.End`
+- [x] Add `Event.ActiveFrames.Begin` and `Event.ActiveFrames.End` to Project Settings → GameplayTags
 
 ### Animation Montages
 Create in `Content/Animations/Montages/`:
