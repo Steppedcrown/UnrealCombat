@@ -211,7 +211,14 @@ void ACombatCharacter::DoComboAttackStart()
 	// Fallback to legacy template combo system if the GAS ability isn't granted yet
 	if (bIsAttacking)
 	{
+		// Buffer the input timestamp
 		CachedAttackInputTime = GetWorld()->GetTimeSeconds();
+
+		// If the combo window is already open, chain immediately rather than waiting
+		if (bComboWindowOpen)
+		{
+			CheckCombo();
+		}
 		return;
 	}
 
@@ -415,6 +422,22 @@ void ACombatCharacter::CheckChargedAttack()
 	{
 		AnimInstance->Montage_JumpToSection(bIsChargingAttack ? ChargeLoopSection : ChargeAttackSection, ChargedAttackMontage);
 	}
+}
+
+void ACombatCharacter::OpenComboWindow()
+{
+	bComboWindowOpen = true;
+
+	// If the player already buffered an input before the window opened, chain immediately
+	if (CachedAttackInputTime > 0.0f)
+	{
+		CheckCombo();
+	}
+}
+
+void ACombatCharacter::CloseComboWindow()
+{
+	bComboWindowOpen = false;
 }
 
 void ACombatCharacter::NotifyEnemiesOfIncomingAttack()

@@ -126,6 +126,9 @@ protected:
 	/** If true, the character is currently playing an attack animation */
 	bool bIsAttacking = false;
 
+	/** True while AnimNotifyState_ComboWindow is active — input during this window immediately chains the combo */
+	bool bComboWindowOpen = false;
+
 	/** Distance ahead of the character that melee attack sphere collision traces will extend */
 	UPROPERTY(EditAnywhere, Category="Melee Attack|Trace", meta = (ClampMin = 0, ClampMax = 500, Units="cm"))
 	float MeleeTraceDistance = 75.0f;
@@ -346,6 +349,12 @@ public:
 
 	/** Performs the charged attack hold check */
 	virtual void CheckChargedAttack() override;
+
+	/** Opens the combo input window */
+	virtual void OpenComboWindow() override;
+
+	/** Closes the combo input window */
+	virtual void CloseComboWindow() override;
 
 	// ~end CombatAttacker interface
 

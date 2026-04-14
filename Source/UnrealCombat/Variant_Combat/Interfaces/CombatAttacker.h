@@ -30,6 +30,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Attacker")
 	virtual void CheckCombo() = 0;
 
+	/** Opens the combo input window. Called by AnimNotifyState_ComboWindow::NotifyBegin. */
+	UFUNCTION(BlueprintCallable, Category="Attacker")
+	virtual void OpenComboWindow() = 0;
+
+	/** Closes the combo input window. Called by AnimNotifyState_ComboWindow::NotifyEnd. */
+	UFUNCTION(BlueprintCallable, Category="Attacker")
+	virtual void CloseComboWindow() = 0;
+
 	/** Performs a charged attack's check to loop the charge animation. Usually called from a montage's AnimNotify */
 	UFUNCTION(BlueprintCallable, Category="Attacker")
 	virtual void CheckChargedAttack() = 0;
