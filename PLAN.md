@@ -204,10 +204,10 @@ Create the following Data Asset instances in `Content/Combat/MoveData/`:
 - [x] Create `ABP_CombatCharacter` in `Content/Animations/` using the character skeleton
 - [x] Create Linked Anim Layer interface `ALI_CombatCharacter` with two layers: `LocomotionLayer`, `CombatLayer`
 - [x] Create `ABL_Locomotion` implementing `LocomotionLayer`:
-  - [ ] Blend walk/sprint/idle using speed from `CharacterMovementComponent`
-  - [ ] Handle jump (in-air blend)
+  - [x] Blend walk/sprint/idle using speed from `CharacterMovementComponent`
+  - [x] Handle jump (in-air blend)
 - [x] Create `ABL_Combat` implementing `CombatLayer`:
-  - [ ] Drive upper body overrides from active montages
+  - [x] Drive upper body overrides from active montages
 - [ ] In `ABP_CombatCharacter`, link both layers using `LinkedAnimLayer` nodes
 - [ ] Assign `ABP_CombatCharacter` to the `SkeletalMeshComponent` on `BP_Player` and `BP_Enemy`
 
