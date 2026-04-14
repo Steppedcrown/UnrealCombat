@@ -1,19 +1,12 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-
 #include "CombatAIController.h"
-#include "Components/StateTreeAIComponent.h"
 
 ACombatAIController::ACombatAIController()
 {
-	// create the StateTree AI Component
-	StateTreeAI = CreateDefaultSubobject<UStateTreeAIComponent>(TEXT("StateTreeAI"));
-	check(StateTreeAI);
-
-	// ensure we start the StateTree when we possess the pawn
+	// Start AI logic (Behavior Tree) automatically on possess
 	bStartAILogicOnPossess = true;
 
-	// ensure we're attached to the possessed character.
-	// this is necessary for EnvQueries to work correctly
+	// Attach to the possessed pawn so EQS queries work correctly
 	bAttachToPawn = true;
 }

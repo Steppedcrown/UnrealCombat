@@ -21,6 +21,8 @@
 #include "CombatAttributeSet.h"
 #include "CombatMoveRegistry.h"
 
+DEFINE_LOG_CATEGORY(LogCombatCharacter);
+
 UAbilitySystemComponent* ACombatCharacter::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;
@@ -229,9 +231,6 @@ void ACombatCharacter::ResetHP()
 {
 	// reset the current HP total
 	CurrentHP = MaxHP;
-
-	// update the life bar
-	LifeBarWidget->SetLifePercentage(1.0f);
 }
 
 void ACombatCharacter::ComboAttack()
@@ -538,18 +537,11 @@ void ACombatCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// get the life bar from the widget component
-	LifeBarWidget = Cast<UCombatLifeBar>(LifeBar->GetUserWidgetObject());
-	check(LifeBarWidget);
-
 	// initialize the camera
 	GetCameraBoom()->TargetArmLength = DefaultCameraDistance;
 
 	// save the relative transform for the mesh so we can reset the ragdoll later
 	MeshStartingTransform = GetMesh()->GetRelativeTransform();
-
-	// set the life bar color
-	LifeBarWidget->SetBarColor(LifeBarColor);
 
 	// reset HP to maximum
 	ResetHP();
