@@ -179,10 +179,10 @@ Create the following Data Asset instances in `Content/Combat/MoveData/`:
 - [x] Create Blueprint child `BP_GA_Expel` in `Content/Combat/Abilities/`
 
 ### UGA_Rip
-- [ ] Create C++ class `UGA_Rip` inheriting from `UGameplayAbility`
-- [ ] In `CanActivateAbility()`: check that caster has enough Nodes
-- [ ] On activation: apply `GE_ConsumeNode` to self
-- [ ] Check if target has `State.Status.Vulnerable` tag:
+- [x] Create C++ class `UGA_Rip` inheriting from `UGameplayAbility`
+- [x] In `CanActivateAbility()`: check that caster has enough Nodes
+- [x] On activation: apply `GE_ConsumeNode` to self
+- [x] Check if target has `State.Status.Vulnerable` tag:
   - **No:** play normal Rip montage, on hit apply `GE_DamageHealth` (minor) and transfer Nodes (apply `GE_ConsumeNode` on target, `GE_RestoreNode` on self for each stolen Node)
   - **Yes:** set Motion Warping target to enemy, play execution montage, on completion apply `GE_Kill` to target
 - [ ] Create Blueprint child `BP_GA_Rip` in `Content/Combat/Abilities/`

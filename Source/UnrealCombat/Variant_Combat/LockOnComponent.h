@@ -43,6 +43,9 @@ public:
 	/** Toggles lock-on on/off. Called from ACombatCharacter::LockOnPressed(). */
 	void ToggleLockOn();
 
+	/** Returns the currently locked target, or nullptr if not locked */
+	FORCEINLINE ACombatCharacter* GetTarget() const { return TargetActor; }
+
 protected:
 
 	virtual void BeginPlay() override;
