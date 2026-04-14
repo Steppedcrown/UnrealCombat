@@ -159,7 +159,7 @@ Create the following Data Asset instances in `Content/Combat/MoveData/`:
 - [x] During active frames: trigger hit detection via `UCombatHitDetectionComponent`
 - [x] On hit: apply `GE_DamageHealth` to target, apply `GE_RestoreNode` to self
 - [x] Apply and clear `State.Combat.Attacking` tag for the duration
-- [ ] Create Blueprint child `BP_GA_BasicAttack` in `Content/Combat/Abilities/`
+- [x] Create Blueprint child `BP_GA_BasicAttack` in `Content/Combat/Abilities/`
 
 ### UGA_Block
 - [ ] Create C++ class `UGA_Block` inheriting from `UGameplayAbility`
