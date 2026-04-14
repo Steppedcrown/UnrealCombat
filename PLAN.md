@@ -211,13 +211,19 @@ Create the following Data Asset instances in `Content/Combat/MoveData/`:
 - [ ] In `ABP_CombatCharacter`, link both layers using `LinkedAnimLayer` nodes
 - [ ] Assign `ABP_CombatCharacter` to the `SkeletalMeshComponent` on `BP_Player` and `BP_Enemy`
 
+### ANS_ActiveFrames (Blueprint Anim Notify State)
+- [ ] Create Blueprint class `ANS_ActiveFrames` in `Content/Animations/` inheriting from `AnimNotifyState`
+- [ ] In `NotifyBegin`: call `UAbilitySystemBlueprintLibrary::SendGameplayEventToActor` on `MeshComp`'s owner, passing tag `Event.ActiveFrames.Begin`
+- [ ] In `NotifyEnd`: same call with tag `Event.ActiveFrames.End`
+- [ ] Add `Event.ActiveFrames.Begin` and `Event.ActiveFrames.End` to Project Settings → GameplayTags
+
 ### Animation Montages
 Create in `Content/Animations/Montages/`:
-- [ ] `AM_BasicAttack` — add `NotifyState_ActiveFrames`, `AnimNotify_SpawnHitEffect`, `AnimNotify_PlayHitSound`
+- [ ] `AM_BasicAttack` — place `ANS_ActiveFrames` notify state over the active hit window; add `AnimNotify_SpawnHitEffect`, `AnimNotify_PlayHitSound`
 - [ ] `AM_Block` — add notify for block window start/end
 - [ ] `AM_PerfectBlock` — add `AnimNotify_SpawnHitEffect`, camera shake trigger
-- [ ] `AM_Expel` — add `NotifyState_ActiveFrames`, `AnimNotify_SpawnHitEffect`, `AnimNotify_PlayHitSound`
-- [ ] `AM_Rip_Normal` — add `NotifyState_ActiveFrames`, `AnimNotify_SpawnHitEffect`
+- [ ] `AM_Expel` — place `ANS_ActiveFrames` notify state over the active hit window; add `AnimNotify_SpawnHitEffect`, `AnimNotify_PlayHitSound`
+- [ ] `AM_Rip_Normal` — place `ANS_ActiveFrames` notify state over the active hit window; add `AnimNotify_SpawnHitEffect`
 - [ ] `AM_Rip_Execution` — add `AnimNotify_EnableMotionWarping`, `AnimNotify_SpawnHitEffect`, `AnimNotify_PlayHitSound`
 
 ### Motion Warping
