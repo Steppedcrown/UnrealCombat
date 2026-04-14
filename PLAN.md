@@ -172,11 +172,11 @@ Create the following Data Asset instances in `Content/Combat/MoveData/`:
 - [x] Create Blueprint child `BP_GA_Block` in `Content/Combat/Abilities/`
 
 ### UGA_Expel
-- [ ] Create C++ class `UGA_Expel` inheriting from `UGameplayAbility`
-- [ ] In `CanActivateAbility()`: check that caster has enough Nodes (>= `NodeCost` from move data)
-- [ ] On activation: apply `GE_ConsumeNode` to self, play montage, run hit detection
-- [ ] On hit: apply `GE_DamageHealth` to target, apply `GE_ApplyTempNode` to target
-- [ ] Create Blueprint child `BP_GA_Expel` in `Content/Combat/Abilities/`
+- [x] Create C++ class `UGA_Expel` inheriting from `UGameplayAbility`
+- [x] In `CanActivateAbility()`: check that caster has enough Nodes (>= `NodeCost` from move data)
+- [x] On activation: apply `GE_ConsumeNode` to self, play montage, run hit detection
+- [x] On hit: apply `GE_DamageHealth` to target, apply `GE_ApplyTempNode` to target
+- [x] Create Blueprint child `BP_GA_Expel` in `Content/Combat/Abilities/`
 
 ### UGA_Rip
 - [ ] Create C++ class `UGA_Rip` inheriting from `UGameplayAbility`
