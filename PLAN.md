@@ -196,9 +196,9 @@ Create the following Data Asset instances in `Content/Combat/MoveData/`:
 ## Phase 6 — Animation
 
 ### Source Assets
-- [ ] Download a humanoid character skeleton and animations from **Fab** or **Mixamo** (ensure the skeleton is compatible with UE5's Mannequin if possible)
-- [ ] Import assets into `Content/Animations/`
-- [ ] Retarget animations to the project skeleton if needed using UE5's IK Retargeter
+- [x] Download a humanoid character skeleton and animations from **Fab** or **Mixamo** (ensure the skeleton is compatible with UE5's Mannequin if possible)
+- [x] Import assets into `Content/Animations/`
+- [x] Retarget animations to the project skeleton if needed using UE5's IK Retargeter
 
 ### Animation Blueprint
 - [ ] Create `ABP_CombatCharacter` in `Content/Animations/` using the character skeleton
