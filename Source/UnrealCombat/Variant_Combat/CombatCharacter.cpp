@@ -535,7 +535,10 @@ void ACombatCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	// initialize the camera
-	GetCameraBoom()->TargetArmLength = DefaultCameraDistance;
+	if (CameraBoom)
+	{
+		CameraBoom->TargetArmLength = DefaultCameraDistance;
+	}
 
 	// save the relative transform for the mesh so we can reset the ragdoll later
 	MeshStartingTransform = GetMesh()->GetRelativeTransform();
