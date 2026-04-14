@@ -188,8 +188,8 @@ Create the following Data Asset instances in `Content/Combat/MoveData/`:
 - [x] Create Blueprint child `BP_GA_Rip` in `Content/Combat/Abilities/`
 
 ### Grant Abilities
-- [ ] In `ACombatCharacter::PossessedBy()`, grant all four abilities to the ASC using `GiveAbility()`
-- [ ] Bind each `IA_*` input action to its corresponding ability's activation tag
+- [x] In `ACombatCharacter::PossessedBy()`, grant all four abilities to the ASC using `GiveAbility()`
+- [x] Bind each `IA_*` input action to its corresponding ability's activation tag
 
 ---
 

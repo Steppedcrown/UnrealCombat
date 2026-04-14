@@ -16,6 +16,7 @@
 #include "Engine/LocalPlayer.h"
 #include "CombatPlayerController.h"
 #include "AbilitySystemComponent.h"
+#include "Abilities/GameplayAbility.h"
 #include "MotionWarpingComponent.h"
 #include "LockOnComponent.h"
 #include "CombatAttributeSet.h"
@@ -32,6 +33,19 @@ void ACombatCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
+
+	// Grant all combat abilities — Blueprint children are assigned in BP_Player / BP_Enemy
+	for (TSubclassOf<UGameplayAbility> AbilityClass : {
+		BasicAttackAbilityClass,
+		BlockAbilityClass,
+		ExpelAbilityClass,
+		RipAbilityClass })
+	{
+		if (AbilityClass)
+		{
+			AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(AbilityClass, 1));
+		}
+	}
 }
 
 void ACombatCharacter::OnRep_PlayerState()
@@ -131,17 +145,23 @@ void ACombatCharacter::ToggleCamera()
 
 void ACombatCharacter::BlockPressed()
 {
-	// stub — full ability wiring comes in Phase 5
+	FGameplayTagContainer Tags;
+	Tags.AddTag(FGameplayTag::RequestGameplayTag(FName("Ability.Block")));
+	AbilitySystemComponent->TryActivateAbilitiesByTag(Tags);
 }
 
 void ACombatCharacter::ExpelPressed()
 {
-	// stub — full ability wiring comes in Phase 5
+	FGameplayTagContainer Tags;
+	Tags.AddTag(FGameplayTag::RequestGameplayTag(FName("Ability.Expel")));
+	AbilitySystemComponent->TryActivateAbilitiesByTag(Tags);
 }
 
 void ACombatCharacter::RipPressed()
 {
-	// stub — full ability wiring comes in Phase 5
+	FGameplayTagContainer Tags;
+	Tags.AddTag(FGameplayTag::RequestGameplayTag(FName("Ability.Rip")));
+	AbilitySystemComponent->TryActivateAbilitiesByTag(Tags);
 }
 
 void ACombatCharacter::LockOnPressed()
@@ -181,16 +201,20 @@ void ACombatCharacter::DoLook(float Yaw, float Pitch)
 
 void ACombatCharacter::DoComboAttackStart()
 {
-	// are we already playing an attack animation?
-	if (bIsAttacking)
+	FGameplayTagContainer Tags;
+	Tags.AddTag(FGameplayTag::RequestGameplayTag(FName("Ability.BasicAttack")));
+	if (AbilitySystemComponent->TryActivateAbilitiesByTag(Tags))
 	{
-		// cache the input time so we can check it later
-		CachedAttackInputTime = GetWorld()->GetTimeSeconds();
-
 		return;
 	}
 
-	// perform a combo attack
+	// Fallback to legacy template combo system if the GAS ability isn't granted yet
+	if (bIsAttacking)
+	{
+		CachedAttackInputTime = GetWorld()->GetTimeSeconds();
+		return;
+	}
+
 	ComboAttack();
 }
 

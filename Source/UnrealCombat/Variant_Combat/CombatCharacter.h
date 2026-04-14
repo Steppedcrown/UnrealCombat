@@ -17,6 +17,7 @@ struct FInputActionValue;
 class UCombatLifeBar;
 class UWidgetComponent;
 class UAbilitySystemComponent;
+class UGameplayAbility;
 class UMotionWarpingComponent;
 class ULockOnComponent;
 class UCombatAttributeSet;
@@ -189,6 +190,19 @@ protected:
 	/** Move registry asset — maps ability tags to move data for runtime lookup by abilities */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Combat")
 	TObjectPtr<UCombatMoveRegistry> MoveRegistry;
+
+	/** Ability classes to grant on possession — assign BP children in the Blueprint */
+	UPROPERTY(EditDefaultsOnly, Category="Combat|Abilities")
+	TSubclassOf<UGameplayAbility> BasicAttackAbilityClass;
+
+	UPROPERTY(EditDefaultsOnly, Category="Combat|Abilities")
+	TSubclassOf<UGameplayAbility> BlockAbilityClass;
+
+	UPROPERTY(EditDefaultsOnly, Category="Combat|Abilities")
+	TSubclassOf<UGameplayAbility> ExpelAbilityClass;
+
+	UPROPERTY(EditDefaultsOnly, Category="Combat|Abilities")
+	TSubclassOf<UGameplayAbility> RipAbilityClass;
 
 	/** Camera boom length while the character is dead */
 	UPROPERTY(EditAnywhere, Category="Camera", meta = (ClampMin = 0, ClampMax = 1000, Units = "cm"))
