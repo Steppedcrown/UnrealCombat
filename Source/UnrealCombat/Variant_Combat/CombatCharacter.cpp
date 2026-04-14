@@ -509,9 +509,6 @@ float ACombatCharacter::TakeDamage(float Damage, struct FDamageEvent const& Dama
 	}
 	else
 	{
-		// update the life bar
-		LifeBarWidget->SetLifePercentage(CurrentHP / MaxHP);
-
 		// enable partial ragdoll physics, but keep the pelvis vertical
 		GetMesh()->SetPhysicsBlendWeight(0.5f);
 		GetMesh()->SetBodySimulatePhysics(PelvisBoneName, false);
