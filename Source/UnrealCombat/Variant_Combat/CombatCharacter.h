@@ -396,4 +396,7 @@ public:
 
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+	/** Returns the move registry, used by abilities to look up move data at runtime */
+	FORCEINLINE UCombatMoveRegistry* GetMoveRegistry() const { return MoveRegistry; }
 };

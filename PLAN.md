@@ -153,12 +153,12 @@ Create the following Data Asset instances in `Content/Combat/MoveData/`:
 > Each ability follows this pattern: C++ base class with core logic → Blueprint child for montage/data wiring
 
 ### UGA_BasicAttack
-- [ ] Create C++ class `UGA_BasicAttack` inheriting from `UGameplayAbility`
-- [ ] In `ActivateAbility()`: look up `DA_BasicAttack` from the registry and play its `AnimationMontage` via `UAbilityTask_PlayMontageAndWait`
-- [ ] Use `UAbilityTask_WaitGameplayEvent` to listen for the `NotifyState_ActiveFrames` window
-- [ ] During active frames: trigger hit detection via `UCombatHitDetectionComponent`
-- [ ] On hit: apply `GE_DamageHealth` to target, apply `GE_RestoreNode` to self
-- [ ] Apply and clear `State.Combat.Attacking` tag for the duration
+- [x] Create C++ class `UGA_BasicAttack` inheriting from `UGameplayAbility`
+- [x] In `ActivateAbility()`: look up `DA_BasicAttack` from the registry and play its `AnimationMontage` via `UAbilityTask_PlayMontageAndWait`
+- [x] Use `UAbilityTask_WaitGameplayEvent` to listen for the `NotifyState_ActiveFrames` window
+- [x] During active frames: trigger hit detection via `UCombatHitDetectionComponent`
+- [x] On hit: apply `GE_DamageHealth` to target, apply `GE_RestoreNode` to self
+- [x] Apply and clear `State.Combat.Attacking` tag for the duration
 - [ ] Create Blueprint child `BP_GA_BasicAttack` in `Content/Combat/Abilities/`
 
 ### UGA_Block
