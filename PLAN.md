@@ -185,7 +185,7 @@ Create the following Data Asset instances in `Content/Combat/MoveData/`:
 - [x] Check if target has `State.Status.Vulnerable` tag:
   - **No:** play normal Rip montage, on hit apply `GE_DamageHealth` (minor) and transfer Nodes (apply `GE_ConsumeNode` on target, `GE_RestoreNode` on self for each stolen Node)
   - **Yes:** set Motion Warping target to enemy, play execution montage, on completion apply `GE_Kill` to target
-- [ ] Create Blueprint child `BP_GA_Rip` in `Content/Combat/Abilities/`
+- [x] Create Blueprint child `BP_GA_Rip` in `Content/Combat/Abilities/`
 
 ### Grant Abilities
 - [ ] In `ACombatCharacter::PossessedBy()`, grant all four abilities to the ASC using `GiveAbility()`

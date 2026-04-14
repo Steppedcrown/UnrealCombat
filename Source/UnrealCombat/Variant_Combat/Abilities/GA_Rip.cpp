@@ -219,11 +219,13 @@ void UGA_Rip::ApplyHitEffects(AActor* HitActor)
 			}
 		}
 
-		StealNodes(HitActor, TargetASC);
+		const UCombatMoveData* MoveData = GetMoveData();
+		const int32 StealCap = MoveData ? MoveData->NodeGain : 0;
+		StealNodes(HitActor, TargetASC, StealCap);
 	}
 }
 
-void UGA_Rip::StealNodes(AActor* TargetActor, UAbilitySystemComponent* TargetASC)
+void UGA_Rip::StealNodes(AActor* TargetActor, UAbilitySystemComponent* TargetASC, int32 StealCap)
 {
 	UAbilitySystemComponent* OwnerASC = GetAbilitySystemComponentFromActorInfo();
 	if (!OwnerASC || !TargetASC)
@@ -237,7 +239,9 @@ void UGA_Rip::StealNodes(AActor* TargetActor, UAbilitySystemComponent* TargetASC
 		return;
 	}
 
-	const int32 NodesToSteal = FMath::FloorToInt(TargetAttrSet->GetNodes());
+	const int32 TargetNodes = FMath::FloorToInt(TargetAttrSet->GetNodes());
+	// StealCap == 0 means steal everything; otherwise steal up to the cap
+	const int32 NodesToSteal = (StealCap > 0) ? FMath::Min(TargetNodes, StealCap) : TargetNodes;
 	if (NodesToSteal <= 0)
 	{
 		return;

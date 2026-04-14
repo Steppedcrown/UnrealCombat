@@ -95,7 +95,8 @@ private:
 	UCombatMoveData* GetMoveData() const;
 	void ConsumeNodes();
 	void ApplyHitEffects(AActor* HitActor);
-	void StealNodes(AActor* TargetActor, UAbilitySystemComponent* TargetASC);
+	/** Steals up to StealCap Nodes from target (0 = steal all) */
+	void StealNodes(AActor* TargetActor, UAbilitySystemComponent* TargetASC, int32 StealCap);
 
 	UFUNCTION() void OnMontageCompleted();
 	UFUNCTION() void OnMontageCancelled();
