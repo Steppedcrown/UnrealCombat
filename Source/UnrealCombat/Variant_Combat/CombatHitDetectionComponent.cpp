@@ -1,6 +1,15 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "CombatHitDetectionComponent.h"
+#include "DrawDebugHelpers.h"
+
+static TAutoConsoleVariable<int32> CVarShowHitboxes(
+	TEXT("combat.ShowHitboxes"),
+	0,
+	TEXT("Draw hit detection sweep boxes each frame while an attack is active.\n")
+	TEXT("  0 = off\n")
+	TEXT("  1 = on (green = miss, red = hit)"),
+	ECVF_Cheat);
 
 UCombatHitDetectionComponent::UCombatHitDetectionComponent()
 {
@@ -86,6 +95,11 @@ void UCombatHitDetectionComponent::TickComponent(float DeltaTime,
 		Box,
 		QueryParams);
 
+	const bool bAnyHit = Hits.ContainsByPredicate([](const FHitResult& H)
+	{
+		return H.GetActor() != nullptr;
+	});
+
 	for (const FHitResult& Hit : Hits)
 	{
 		AActor* HitActor = Hit.GetActor();
@@ -97,6 +111,16 @@ void UCombatHitDetectionComponent::TickComponent(float DeltaTime,
 		HitActors.Add(HitActor);
 		OnHit.Broadcast(Hit);
 	}
+
+#if ENABLE_DRAW_DEBUG
+	if (CVarShowHitboxes.GetValueOnGameThread())
+	{
+		const FVector  MidPoint = (PreviousBoneLocation + CurrentBoneLocation) * 0.5f;
+		const FColor   BoxColor = bAnyHit ? FColor::Red : FColor::Green;
+		DrawDebugBox(GetWorld(), MidPoint, SweepHalfExtent, SweepRotation, BoxColor,
+			/*bPersistentLines=*/false, /*LifeTime=*/-1.f, /*DepthPriority=*/0, /*Thickness=*/1.f);
+	}
+#endif
 
 	PreviousBoneLocation = CurrentBoneLocation;
 }

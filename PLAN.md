@@ -250,9 +250,9 @@ Create in `Content/Animations/Montages/`:
 - [x] Attach component to `ACombatCharacter` in C++
 
 ### Debug Visualization
-- [ ] Add a console variable `combat.ShowHitboxes` (default `0`)
-- [ ] When `1`: draw debug boxes each frame during active sweep using `DrawDebugBox()`
-- [ ] Color green on miss, red on hit
+- [x] Add a console variable `combat.ShowHitboxes` (default `0`)
+- [x] When `1`: draw debug boxes each frame during active sweep using `DrawDebugBox()`
+- [x] Color green on miss, red on hit
 
 ---
 
