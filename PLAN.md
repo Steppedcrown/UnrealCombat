@@ -239,7 +239,7 @@ Create in `Content/Animations/Montages/`:
 - [x] In **Project Settings > Collision**, add a new Object Channel: `HitDetection`
 - [x] Create collision profile `Profile_Character`: blocks `Pawn`, responds to `HitDetection`
 - [x] Create collision profile `Profile_Hitbox`: used for detection sweeps, ignores everything except `Profile_Character`
-- [ ] Assign `Profile_Character` to the `CapsuleComponent` on `BP_Player` and `BP_Enemy`
+- [x] Assign `Profile_Character` to the `CapsuleComponent` on `BP_Player` and `BP_Enemy`
 
 ### UCombatHitDetectionComponent (C++)
 - [ ] Create C++ component `UCombatHitDetectionComponent`
