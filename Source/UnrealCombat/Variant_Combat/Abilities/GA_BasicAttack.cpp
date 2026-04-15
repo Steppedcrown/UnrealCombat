@@ -152,6 +152,11 @@ void UGA_BasicAttack::OnActiveFramesBegin(FGameplayEventData Payload)
 {
 	if (HitDetectionComponent)
 	{
+		if (const UCombatMoveData* MoveData = GetMoveData())
+		{
+			HitDetectionComponent->WeaponBoneName  = MoveData->WeaponBoneName;
+			HitDetectionComponent->SweepHalfExtent = MoveData->SweepHalfExtent;
+		}
 		HitDetectionComponent->StartTrace();
 	}
 }

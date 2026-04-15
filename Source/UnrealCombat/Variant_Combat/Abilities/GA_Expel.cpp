@@ -183,6 +183,11 @@ void UGA_Expel::OnActiveFramesBegin(FGameplayEventData Payload)
 {
 	if (HitDetectionComponent)
 	{
+		if (const UCombatMoveData* MoveData = GetMoveData())
+		{
+			HitDetectionComponent->WeaponBoneName  = MoveData->WeaponBoneName;
+			HitDetectionComponent->SweepHalfExtent = MoveData->SweepHalfExtent;
+		}
 		HitDetectionComponent->StartTrace();
 	}
 }
