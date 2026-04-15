@@ -10,6 +10,8 @@
 #include "CombatMoveRegistry.h"
 #include "CombatHitDetectionComponent.h"
 #include "CombatAttributeSet.h"
+#include "LockOnComponent.h"
+#include "MotionWarpingComponent.h"
 
 UGA_Rip::UGA_Rip()
 {
@@ -79,6 +81,22 @@ void UGA_Rip::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 		return;
 	}
 
+	// Check for a locked-on vulnerable target to determine execution vs normal path
+	AActor* VulnerableTarget = GetVulnerableLockedTarget();
+	bIsExecution = (VulnerableTarget != nullptr) && (ExecutionMontage != nullptr);
+
+	if (bIsExecution)
+	{
+		// Set up motion warping so the character glides to the target during the execution montage
+		ACombatCharacter* CombatChar = Cast<ACombatCharacter>(ActorInfo->AvatarActor.Get());
+		if (UMotionWarpingComponent* MWC = CombatChar ? CombatChar->GetMotionWarpingComponent() : nullptr)
+		{
+			MWC->AddOrUpdateWarpTargetFromTransform(
+				ExecutionWarpTargetName,
+				VulnerableTarget->GetActorTransform());
+		}
+	}
+
 	if (AActor* AvatarActor = ActorInfo->AvatarActor.Get())
 	{
 		HitDetectionComponent = AvatarActor->FindComponentByClass<UCombatHitDetectionComponent>();
@@ -88,8 +106,9 @@ void UGA_Rip::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 		}
 	}
 
+	UAnimMontage* MontageToPlay = bIsExecution ? ExecutionMontage : MoveData->AnimationMontage;
 	UAbilityTask_PlayMontageAndWait* MontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
-		this, NAME_None, MoveData->AnimationMontage);
+		this, NAME_None, MontageToPlay);
 
 	MontageTask->OnCompleted.AddDynamic(this, &UGA_Rip::OnMontageCompleted);
 	MontageTask->OnCancelled.AddDynamic(this, &UGA_Rip::OnMontageCancelled);
@@ -301,6 +320,36 @@ void UGA_Rip::ConsumeNodes()
 			OwnerASC->ApplyGameplayEffectSpecToSelf(*ConsumeSpec.Data.Get());
 		}
 	}
+}
+
+AActor* UGA_Rip::GetVulnerableLockedTarget() const
+{
+	const ACombatCharacter* CombatChar = Cast<ACombatCharacter>(GetAvatarActorFromActorInfo());
+	if (!CombatChar)
+	{
+		return nullptr;
+	}
+
+	ULockOnComponent* LockOn = CombatChar->FindComponentByClass<ULockOnComponent>();
+	if (!LockOn || !LockOn->bIsLocked)
+	{
+		return nullptr;
+	}
+
+	ACombatCharacter* Target = LockOn->GetTarget();
+	if (!Target)
+	{
+		return nullptr;
+	}
+
+	UAbilitySystemComponent* TargetASC = Target->FindComponentByClass<UAbilitySystemComponent>();
+	if (!TargetASC)
+	{
+		return nullptr;
+	}
+
+	const FGameplayTag VulnerableTag = FGameplayTag::RequestGameplayTag(FName("State.Status.Vulnerable"));
+	return TargetASC->HasMatchingGameplayTag(VulnerableTag) ? Target : nullptr;
 }
 
 UCombatMoveData* UGA_Rip::GetMoveData() const
