@@ -19,6 +19,9 @@ UGA_Rip::UGA_Rip()
 
 	ActivationOwnedTags.AddTag(FGameplayTag::RequestGameplayTag(FName("State.Combat.Attacking")));
 
+	// Identity tag — required for TryActivateAbilitiesByTag to find this ability
+	AbilityTags.AddTag(FGameplayTag::RequestGameplayTag(FName("Ability.Rip")));
+
 	MoveTag = FGameplayTag::RequestGameplayTag(FName("Ability.Rip"));
 
 	ActiveFramesBeginTag = FGameplayTag::RequestGameplayTag(FName("Event.ActiveFrames.Begin"), /*bErrorIfNotFound=*/false);

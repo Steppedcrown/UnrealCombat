@@ -35,6 +35,7 @@ void ACombatCharacter::PossessedBy(AController* NewController)
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 
 	// Grant all combat abilities — Blueprint children are assigned in BP_Player / BP_Enemy
+	int32 GrantedCount = 0;
 	for (TSubclassOf<UGameplayAbility> AbilityClass : {
 		BasicAttackAbilityClass,
 		BlockAbilityClass,
@@ -44,7 +45,22 @@ void ACombatCharacter::PossessedBy(AController* NewController)
 		if (AbilityClass)
 		{
 			AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(AbilityClass, 1));
+			UE_LOG(LogCombatCharacter, Log, TEXT("PossessedBy: Granted ability %s"), *AbilityClass->GetName());
+			++GrantedCount;
 		}
+		else
+		{
+			UE_LOG(LogCombatCharacter, Warning, TEXT("PossessedBy: An ability class slot is null — check BP_Player ability assignments"));
+		}
+	}
+	UE_LOG(LogCombatCharacter, Log, TEXT("PossessedBy: Granted %d abilities total"), GrantedCount);
+
+	// Log the actual AbilityTags on each granted spec so we can verify tag lookup will work
+	for (const FGameplayAbilitySpec& Spec : AbilitySystemComponent->GetActivatableAbilities())
+	{
+		UE_LOG(LogCombatCharacter, Log, TEXT("  Spec: %s | AbilityTags: %s"),
+			*GetNameSafe(Spec.Ability),
+			*Spec.Ability->AbilityTags.ToStringSimple());
 	}
 }
 
@@ -203,10 +219,13 @@ void ACombatCharacter::DoComboAttackStart()
 {
 	FGameplayTagContainer Tags;
 	Tags.AddTag(FGameplayTag::RequestGameplayTag(FName("Ability.BasicAttack")));
+	UE_LOG(LogCombatCharacter, Log, TEXT("DoComboAttackStart: Attempting TryActivateAbilitiesByTag(Ability.BasicAttack)"));
 	if (AbilitySystemComponent->TryActivateAbilitiesByTag(Tags))
 	{
+		UE_LOG(LogCombatCharacter, Log, TEXT("DoComboAttackStart: GAS ability activated successfully"));
 		return;
 	}
+	UE_LOG(LogCombatCharacter, Warning, TEXT("DoComboAttackStart: GAS activation failed — falling back to legacy combo"));
 
 	// Fallback to legacy template combo system if the GAS ability isn't granted yet
 	if (bIsAttacking)
