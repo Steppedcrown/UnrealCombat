@@ -161,23 +161,29 @@ void ACombatCharacter::ToggleCamera()
 
 void ACombatCharacter::BlockPressed()
 {
+	UE_LOG(LogCombatCharacter, Log, TEXT("BlockPressed: Attempting TryActivateAbilitiesByTag(Ability.Block)"));
 	FGameplayTagContainer Tags;
 	Tags.AddTag(FGameplayTag::RequestGameplayTag(FName("Ability.Block")));
-	AbilitySystemComponent->TryActivateAbilitiesByTag(Tags);
+	const bool bSuccess = AbilitySystemComponent->TryActivateAbilitiesByTag(Tags);
+	UE_LOG(LogCombatCharacter, Log, TEXT("BlockPressed: Result = %s"), bSuccess ? TEXT("Success") : TEXT("Failed"));
 }
 
 void ACombatCharacter::ExpelPressed()
 {
+	UE_LOG(LogCombatCharacter, Log, TEXT("ExpelPressed: Attempting TryActivateAbilitiesByTag(Ability.Expel)"));
 	FGameplayTagContainer Tags;
 	Tags.AddTag(FGameplayTag::RequestGameplayTag(FName("Ability.Expel")));
-	AbilitySystemComponent->TryActivateAbilitiesByTag(Tags);
+	const bool bSuccess = AbilitySystemComponent->TryActivateAbilitiesByTag(Tags);
+	UE_LOG(LogCombatCharacter, Log, TEXT("ExpelPressed: Result = %s"), bSuccess ? TEXT("Success") : TEXT("Failed"));
 }
 
 void ACombatCharacter::RipPressed()
 {
+	UE_LOG(LogCombatCharacter, Log, TEXT("RipPressed: Attempting TryActivateAbilitiesByTag(Ability.Rip)"));
 	FGameplayTagContainer Tags;
 	Tags.AddTag(FGameplayTag::RequestGameplayTag(FName("Ability.Rip")));
-	AbilitySystemComponent->TryActivateAbilitiesByTag(Tags);
+	const bool bSuccess = AbilitySystemComponent->TryActivateAbilitiesByTag(Tags);
+	UE_LOG(LogCombatCharacter, Log, TEXT("RipPressed: Result = %s"), bSuccess ? TEXT("Success") : TEXT("Failed"));
 }
 
 void ACombatCharacter::LockOnPressed()
