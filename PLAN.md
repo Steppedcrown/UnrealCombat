@@ -227,9 +227,9 @@ Create in `Content/Animations/Montages/`:
 - [x] `AM_RipExecution` — add `AnimNotify_EnableMotionWarping`, `AnimNotify_SpawnHitEffect`, `AnimNotify_PlayHitSound`
 
 ### Motion Warping
-- [ ] Add `UMotionWarpingComponent` to `ACombatCharacter` in C++
-- [ ] Before playing `AM_Rip_Execution`, call `MotionWarpingComponent->AddOrUpdateWarpTargetFromTransform()` using the locked-on enemy's transform
-- [ ] Add a Motion Warping window to `AM_Rip_Execution` in the Montage editor targeting the warp point
+- [x] Add `UMotionWarpingComponent` to `ACombatCharacter` in C++
+- [x] Before playing `AM_Rip_Execution`, call `MotionWarpingComponent->AddOrUpdateWarpTargetFromTransform()` using the locked-on enemy's transform
+- [x] Add a Motion Warping window to `AM_Rip_Execution` in the Montage editor targeting the warp point
 
 ### Hit-Stop
 - [ ] Create a C++ helper function `ApplyHitStop(float Duration)` on `ACombatCharacter`
