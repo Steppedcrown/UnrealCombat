@@ -220,9 +220,9 @@ Create the following Data Asset instances in `Content/Combat/MoveData/`:
 ### Animation Montages
 Create in `Content/Animations/Montages/`:
 - [x] `AM_BasicAttack` — place `ANS_ActiveFrames` notify state over the active hit window; add `AnimNotify_SpawnHitEffect`, `AnimNotify_PlayHitSound`
-- [ ] `AM_Block` — add notify for block window start/end
-- [ ] `AM_PerfectBlock` — add `AnimNotify_SpawnHitEffect`, camera shake trigger
-- [ ] `AM_Expel` — place `ANS_ActiveFrames` notify state over the active hit window; add `AnimNotify_SpawnHitEffect`, `AnimNotify_PlayHitSound`
+- [x] `AM_Block` — add notify for block window start/end
+- [x] `AM_PerfectBlock` — add `AnimNotify_SpawnHitEffect`, camera shake trigger
+- [x] `AM_Expel` — place `ANS_ActiveFrames` notify state over the active hit window; add `AnimNotify_SpawnHitEffect`, `AnimNotify_PlayHitSound`
 - [ ] `AM_Rip_Normal` — place `ANS_ActiveFrames` notify state over the active hit window; add `AnimNotify_SpawnHitEffect`
 - [ ] `AM_Rip_Execution` — add `AnimNotify_EnableMotionWarping`, `AnimNotify_SpawnHitEffect`, `AnimNotify_PlayHitSound`
 
