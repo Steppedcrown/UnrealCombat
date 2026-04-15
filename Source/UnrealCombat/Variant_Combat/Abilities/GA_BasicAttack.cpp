@@ -19,6 +19,9 @@ UGA_BasicAttack::UGA_BasicAttack()
 	// GAS removes the tag when EndAbility fires.
 	ActivationOwnedTags.AddTag(FGameplayTag::RequestGameplayTag(FName("State.Combat.Attacking")));
 
+	// Identity tag — required for TryActivateAbilitiesByTag to find this ability
+	AbilityTags.AddTag(FGameplayTag::RequestGameplayTag(FName("Ability.BasicAttack")));
+
 	// Default the move lookup tag — Blueprint child can override if needed
 	MoveTag = FGameplayTag::RequestGameplayTag(FName("Ability.BasicAttack"));
 }
@@ -34,15 +37,23 @@ void UGA_BasicAttack::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 		return;
 	}
 
+	UE_LOG(LogTemp, Log, TEXT("UGA_BasicAttack: ActivateAbility called"));
+
 	// Look up move data from the registry
 	const UCombatMoveData* MoveData = GetMoveData();
-	if (!MoveData || !MoveData->AnimationMontage)
+	if (!MoveData)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("UGA_BasicAttack: No move data or animation montage found for tag %s"),
-			*MoveTag.ToString());
+		UE_LOG(LogTemp, Warning, TEXT("UGA_BasicAttack: No move data found — check DA_MoveRegistry has Ability.BasicAttack entry and BP_Player has MoveRegistry assigned"));
 		EndAbility(Handle, ActorInfo, ActivationInfo, true, true);
 		return;
 	}
+	if (!MoveData->AnimationMontage)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("UGA_BasicAttack: Move data found but AnimationMontage is null — check DA_BasicAttack has a montage assigned"));
+		EndAbility(Handle, ActorInfo, ActivationInfo, true, true);
+		return;
+	}
+	UE_LOG(LogTemp, Log, TEXT("UGA_BasicAttack: Playing montage %s"), *MoveData->AnimationMontage->GetName());
 
 	// Cache the hit detection component for use in active frame callbacks
 	if (AActor* AvatarActor = ActorInfo->AvatarActor.Get())

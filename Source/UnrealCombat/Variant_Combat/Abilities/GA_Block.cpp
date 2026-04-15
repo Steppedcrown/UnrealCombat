@@ -22,6 +22,9 @@ UGA_Block::UGA_Block()
 	// GAS removes the tag when EndAbility fires.
 	ActivationOwnedTags.AddTag(FGameplayTag::RequestGameplayTag(FName("State.Combat.Blocking")));
 
+	// Identity tag — required for TryActivateAbilitiesByTag to find this ability
+	AbilityTags.AddTag(FGameplayTag::RequestGameplayTag(FName("Ability.Block")));
+
 	// Default the move lookup tag — Blueprint child can override
 	MoveTag = FGameplayTag::RequestGameplayTag(FName("Ability.Block"));
 

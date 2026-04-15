@@ -90,6 +90,14 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category="Rip|Effects")
 	TSubclassOf<UGameplayEffect> KillEffectClass;
 
+	/** Montage to play for the execution path (target is Vulnerable + locked on). Assigned in BP_GA_Rip. */
+	UPROPERTY(EditDefaultsOnly, Category="Rip")
+	TObjectPtr<UAnimMontage> ExecutionMontage;
+
+	/** Name of the Motion Warping target added to MotionWarpingComponent before execution montage plays */
+	UPROPERTY(EditDefaultsOnly, Category="Rip")
+	FName ExecutionWarpTargetName = FName("ExecutionTarget");
+
 private:
 
 	UCombatMoveData* GetMoveData() const;
@@ -97,6 +105,9 @@ private:
 	void ApplyHitEffects(AActor* HitActor);
 	/** Steals up to StealCap Nodes from target (0 = steal all) */
 	void StealNodes(AActor* TargetActor, UAbilitySystemComponent* TargetASC, int32 StealCap);
+
+	/** Returns the locked-on target if one exists and has State.Status.Vulnerable, otherwise nullptr */
+	AActor* GetVulnerableLockedTarget() const;
 
 	UFUNCTION() void OnMontageCompleted();
 	UFUNCTION() void OnMontageCancelled();
@@ -107,4 +118,7 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<UCombatHitDetectionComponent> HitDetectionComponent;
+
+	/** True when the execution path was chosen on this activation */
+	bool bIsExecution = false;
 };

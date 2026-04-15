@@ -196,45 +196,40 @@ Create the following Data Asset instances in `Content/Combat/MoveData/`:
 ## Phase 6 — Animation
 
 ### Source Assets
-- [ ] Download a humanoid character skeleton and animations from **Fab** or **Mixamo** (ensure the skeleton is compatible with UE5's Mannequin if possible)
-- [ ] Import assets into `Content/Animations/`
-- [ ] Retarget animations to the project skeleton if needed using UE5's IK Retargeter
+- [x] Download a humanoid character skeleton and animations from **Fab** or **Mixamo** (ensure the skeleton is compatible with UE5's Mannequin if possible)
+- [x] Import assets into `Content/Animations/`
+- [x] Retarget animations to the project skeleton if needed using UE5's IK Retargeter
 
 ### Animation Blueprint
-- [ ] Create `ABP_CombatCharacter` in `Content/Animations/` using the character skeleton
-- [ ] Create Linked Anim Layer interface `ALI_CombatCharacter` with two layers: `LocomotionLayer`, `CombatLayer`
-- [ ] Create `ABL_Locomotion` implementing `LocomotionLayer`:
-  - [ ] Blend walk/sprint/idle using speed from `CharacterMovementComponent`
-  - [ ] Handle jump (in-air blend)
-- [ ] Create `ABL_Combat` implementing `CombatLayer`:
-  - [ ] Drive upper body overrides from active montages
-- [ ] In `ABP_CombatCharacter`, link both layers using `LinkedAnimLayer` nodes
-- [ ] Assign `ABP_CombatCharacter` to the `SkeletalMeshComponent` on `BP_Player` and `BP_Enemy`
+- [x] Create `ABP_CombatCharacter` in `Content/Animations/` using the character skeleton
+- [x] Create Linked Anim Layer interface `ALI_CombatCharacter` with two layers: `LocomotionLayer`, `CombatLayer`
+- [x] Create `ABL_Locomotion` implementing `LocomotionLayer`:
+  - [x] Blend walk/sprint/idle using speed from `CharacterMovementComponent`
+  - [x] Handle jump (in-air blend)
+- [x] Create `ABL_Combat` implementing `CombatLayer`:
+  - [x] Drive upper body overrides from active montages
+- [x] In `ABP_CombatCharacter`, link both layers using `LinkedAnimLayer` nodes
+- [x] Assign `ABP_CombatCharacter` to the `SkeletalMeshComponent` on `BP_Player` and `BP_Enemy`
 
 ### ANS_ActiveFrames (Blueprint Anim Notify State)
-- [ ] Create Blueprint class `ANS_ActiveFrames` in `Content/Animations/` inheriting from `AnimNotifyState`
-- [ ] In `NotifyBegin`: call `UAbilitySystemBlueprintLibrary::SendGameplayEventToActor` on `MeshComp`'s owner, passing tag `Event.ActiveFrames.Begin`
-- [ ] In `NotifyEnd`: same call with tag `Event.ActiveFrames.End`
-- [ ] Add `Event.ActiveFrames.Begin` and `Event.ActiveFrames.End` to Project Settings → GameplayTags
+- [x] Create Blueprint class `ANS_ActiveFrames` in `Content/Animations/` inheriting from `AnimNotifyState`
+- [x] In `NotifyBegin`: call `UAbilitySystemBlueprintLibrary::SendGameplayEventToActor` on `MeshComp`'s owner, passing tag `Event.ActiveFrames.Begin`
+- [x] In `NotifyEnd`: same call with tag `Event.ActiveFrames.End`
+- [x] Add `Event.ActiveFrames.Begin` and `Event.ActiveFrames.End` to Project Settings → GameplayTags
 
 ### Animation Montages
 Create in `Content/Animations/Montages/`:
-- [ ] `AM_BasicAttack` — place `ANS_ActiveFrames` notify state over the active hit window; add `AnimNotify_SpawnHitEffect`, `AnimNotify_PlayHitSound`
-- [ ] `AM_Block` — add notify for block window start/end
-- [ ] `AM_PerfectBlock` — add `AnimNotify_SpawnHitEffect`, camera shake trigger
-- [ ] `AM_Expel` — place `ANS_ActiveFrames` notify state over the active hit window; add `AnimNotify_SpawnHitEffect`, `AnimNotify_PlayHitSound`
-- [ ] `AM_Rip_Normal` — place `ANS_ActiveFrames` notify state over the active hit window; add `AnimNotify_SpawnHitEffect`
-- [ ] `AM_Rip_Execution` — add `AnimNotify_EnableMotionWarping`, `AnimNotify_SpawnHitEffect`, `AnimNotify_PlayHitSound`
+- [x] `AM_BasicAttack` — place `ANS_ActiveFrames` notify state over the active hit window; add `AnimNotify_SpawnHitEffect`, `AnimNotify_PlayHitSound`
+- [x] `AM_Block` — add notify for block window start/end
+- [x] `AM_PerfectBlock` — add `AnimNotify_SpawnHitEffect`, camera shake trigger
+- [x] `AM_Expel` — place `ANS_ActiveFrames` notify state over the active hit window; add `AnimNotify_SpawnHitEffect`, `AnimNotify_PlayHitSound`
+- [x] `AM_RipNormal` — place `ANS_ActiveFrames` notify state over the active hit window; add `AnimNotify_SpawnHitEffect`
+- [x] `AM_RipExecution` — add `AnimNotify_EnableMotionWarping`, `AnimNotify_SpawnHitEffect`, `AnimNotify_PlayHitSound`
 
 ### Motion Warping
-- [ ] Add `UMotionWarpingComponent` to `ACombatCharacter` in C++
-- [ ] Before playing `AM_Rip_Execution`, call `MotionWarpingComponent->AddOrUpdateWarpTargetFromTransform()` using the locked-on enemy's transform
-- [ ] Add a Motion Warping window to `AM_Rip_Execution` in the Montage editor targeting the warp point
-
-### Hit-Stop
-- [ ] Create a C++ helper function `ApplyHitStop(float Duration)` on `ACombatCharacter`
-- [ ] In the function: call `UGameplayStatics::SetGlobalTimeDilation(this, 0.05f)`, then use a `FTimerHandle` to restore it to `1.0f` after `Duration` seconds
-- [ ] Call `ApplyHitStop` on Perfect Block and Expel hit
+- [x] Add `UMotionWarpingComponent` to `ACombatCharacter` in C++
+- [x] Before playing `AM_Rip_Execution`, call `MotionWarpingComponent->AddOrUpdateWarpTargetFromTransform()` using the locked-on enemy's transform
+- [x] Add a Motion Warping window to `AM_Rip_Execution` in the Montage editor targeting the warp point
 
 ---
 
@@ -342,6 +337,11 @@ Create in `Content/Core/CameraShakes/`:
 ### Knockback
 - [ ] In the `GE_Knockback` Gameplay Cue: call `LaunchCharacter()` on the target with a directional impulse away from the caster
 - [ ] Expose knockback force as a field on `UCombatMoveData` so it can be tuned per move
+
+### Hit-Stop
+- [ ] Create a C++ helper function `ApplyHitStop(float Duration)` on `ACombatCharacter`
+- [ ] In the function: call `UGameplayStatics::SetGlobalTimeDilation(this, 0.05f)`, then use a `FTimerHandle` to restore it to `1.0f` after `Duration` seconds
+- [ ] Call `ApplyHitStop` on Perfect Block and Expel hit
 
 ### Input Buffering
 - [ ] Consider implementing based on how inputs feel
