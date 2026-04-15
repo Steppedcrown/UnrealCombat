@@ -642,7 +642,7 @@ void ACombatCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		EnhancedInputComponent->BindAction(MouseLookAction, ETriggerEvent::Triggered, this, &ACombatCharacter::Look);
 
 		// Combo Attack
-		EnhancedInputComponent->BindAction(ComboAttackAction, ETriggerEvent::Started, this, &ACombatCharacter::ComboAttackPressed);
+		EnhancedInputComponent->BindAction(BasicAttackAction, ETriggerEvent::Started, this, &ACombatCharacter::ComboAttackPressed);
 
 		// Charged Attack
 		EnhancedInputComponent->BindAction(ChargedAttackAction, ETriggerEvent::Started, this, &ACombatCharacter::ChargedAttackPressed);

@@ -68,9 +68,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Input")
 	UInputAction* MouseLookAction;
 
-	/** Combo Attack Input Action */
+	/** Basic Attack Input Action */
 	UPROPERTY(EditAnywhere, Category ="Input")
-	UInputAction* ComboAttackAction;
+	UInputAction* BasicAttackAction;
 
 	/** Charged Attack Input Action */
 	UPROPERTY(EditAnywhere, Category ="Input")
