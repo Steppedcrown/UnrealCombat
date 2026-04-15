@@ -20,7 +20,11 @@ UGA_Rip::UGA_Rip()
 	ActivationOwnedTags.AddTag(FGameplayTag::RequestGameplayTag(FName("State.Combat.Attacking")));
 
 	// Identity tag — required for TryActivateAbilitiesByTag to find this ability
-	AbilityTags.AddTag(FGameplayTag::RequestGameplayTag(FName("Ability.Rip")));
+	{
+		FGameplayTagContainer Tags;
+		Tags.AddTag(FGameplayTag::RequestGameplayTag(FName("Ability.Rip")));
+		SetAssetTags(Tags);
+	}
 
 	MoveTag = FGameplayTag::RequestGameplayTag(FName("Ability.Rip"));
 
@@ -172,6 +176,11 @@ void UGA_Rip::OnActiveFramesBegin(FGameplayEventData Payload)
 {
 	if (HitDetectionComponent)
 	{
+		if (const UCombatMoveData* MoveData = GetMoveData())
+		{
+			HitDetectionComponent->WeaponBoneName  = MoveData->WeaponBoneName;
+			HitDetectionComponent->SweepHalfExtent = MoveData->SweepHalfExtent;
+		}
 		HitDetectionComponent->StartTrace();
 	}
 }

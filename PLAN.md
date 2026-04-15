@@ -236,23 +236,23 @@ Create in `Content/Animations/Montages/`:
 ## Phase 7 — Hit Detection & Collision
 
 ### Collision Setup
-- [ ] In **Project Settings > Collision**, add a new Object Channel: `HitDetection`
-- [ ] Create collision profile `Profile_Character`: blocks `Pawn`, responds to `HitDetection`
-- [ ] Create collision profile `Profile_Hitbox`: used for detection sweeps, ignores everything except `Profile_Character`
-- [ ] Assign `Profile_Character` to the `CapsuleComponent` on `BP_Player` and `BP_Enemy`
+- [x] In **Project Settings > Collision**, add a new Object Channel: `HitDetection`
+- [x] Create collision profile `Profile_Character`: blocks `Pawn`, responds to `HitDetection`
+- [x] Create collision profile `Profile_Hitbox`: used for detection sweeps, ignores everything except `Profile_Character`
+- [x] Assign `Profile_Character` to the `CapsuleComponent` on `BP_Player` and `BP_Enemy`
 
 ### UCombatHitDetectionComponent (C++)
-- [ ] Create C++ component `UCombatHitDetectionComponent`
-- [ ] Add `StartTrace()` and `StopTrace()` functions called by ability Active Frame notifies
-- [ ] In `TickComponent()` while tracing: perform a box sweep from the weapon bone's previous position to current position
-- [ ] Store already-hit actors in a `TArray<AActor*> HitActors` — clear on `StartTrace()`, skip on repeat hits
-- [ ] Broadcast an `OnHit` delegate with the hit result for abilities to bind to
-- [ ] Attach component to `ACombatCharacter` in C++
+- [x] Create C++ component `UCombatHitDetectionComponent`
+- [x] Add `StartTrace()` and `StopTrace()` functions called by ability Active Frame notifies
+- [x] In `TickComponent()` while tracing: perform a box sweep from the weapon bone's previous position to current position
+- [x] Store already-hit actors in a `TArray<AActor*> HitActors` — clear on `StartTrace()`, skip on repeat hits
+- [x] Broadcast an `OnHit` delegate with the hit result for abilities to bind to
+- [x] Attach component to `ACombatCharacter` in C++
 
 ### Debug Visualization
-- [ ] Add a console variable `combat.ShowHitboxes` (default `0`)
-- [ ] When `1`: draw debug boxes each frame during active sweep using `DrawDebugBox()`
-- [ ] Color green on miss, red on hit
+- [x] Add a console variable `combat.ShowHitboxes` (default `0`)
+- [x] When `1`: draw debug boxes each frame during active sweep using `DrawDebugBox()`
+- [x] Color green on miss, red on hit
 
 ---
 

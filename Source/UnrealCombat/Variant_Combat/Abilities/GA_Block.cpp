@@ -23,7 +23,11 @@ UGA_Block::UGA_Block()
 	ActivationOwnedTags.AddTag(FGameplayTag::RequestGameplayTag(FName("State.Combat.Blocking")));
 
 	// Identity tag — required for TryActivateAbilitiesByTag to find this ability
-	AbilityTags.AddTag(FGameplayTag::RequestGameplayTag(FName("Ability.Block")));
+	{
+		FGameplayTagContainer Tags;
+		Tags.AddTag(FGameplayTag::RequestGameplayTag(FName("Ability.Block")));
+		SetAssetTags(Tags);
+	}
 
 	// Default the move lookup tag — Blueprint child can override
 	MoveTag = FGameplayTag::RequestGameplayTag(FName("Ability.Block"));
