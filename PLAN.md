@@ -231,11 +231,6 @@ Create in `Content/Animations/Montages/`:
 - [x] Before playing `AM_Rip_Execution`, call `MotionWarpingComponent->AddOrUpdateWarpTargetFromTransform()` using the locked-on enemy's transform
 - [x] Add a Motion Warping window to `AM_Rip_Execution` in the Montage editor targeting the warp point
 
-### Hit-Stop
-- [ ] Create a C++ helper function `ApplyHitStop(float Duration)` on `ACombatCharacter`
-- [ ] In the function: call `UGameplayStatics::SetGlobalTimeDilation(this, 0.05f)`, then use a `FTimerHandle` to restore it to `1.0f` after `Duration` seconds
-- [ ] Call `ApplyHitStop` on Perfect Block and Expel hit
-
 ---
 
 ## Phase 7 — Hit Detection & Collision
@@ -342,6 +337,11 @@ Create in `Content/Core/CameraShakes/`:
 ### Knockback
 - [ ] In the `GE_Knockback` Gameplay Cue: call `LaunchCharacter()` on the target with a directional impulse away from the caster
 - [ ] Expose knockback force as a field on `UCombatMoveData` so it can be tuned per move
+
+### Hit-Stop
+- [ ] Create a C++ helper function `ApplyHitStop(float Duration)` on `ACombatCharacter`
+- [ ] In the function: call `UGameplayStatics::SetGlobalTimeDilation(this, 0.05f)`, then use a `FTimerHandle` to restore it to `1.0f` after `Duration` seconds
+- [ ] Call `ApplyHitStop` on Perfect Block and Expel hit
 
 ### Input Buffering
 - [ ] Consider implementing based on how inputs feel
