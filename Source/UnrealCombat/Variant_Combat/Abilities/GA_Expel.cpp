@@ -18,7 +18,11 @@ UGA_Expel::UGA_Expel()
 	ActivationOwnedTags.AddTag(FGameplayTag::RequestGameplayTag(FName("State.Combat.Attacking")));
 
 	// Identity tag — required for TryActivateAbilitiesByTag to find this ability
-	AbilityTags.AddTag(FGameplayTag::RequestGameplayTag(FName("Ability.Expel")));
+	{
+		FGameplayTagContainer Tags;
+		Tags.AddTag(FGameplayTag::RequestGameplayTag(FName("Ability.Expel")));
+		SetAssetTags(Tags);
+	}
 
 	MoveTag = FGameplayTag::RequestGameplayTag(FName("Ability.Expel"));
 

@@ -22,6 +22,7 @@ class UMotionWarpingComponent;
 class ULockOnComponent;
 class UCombatAttributeSet;
 class UCombatMoveRegistry;
+class UCombatHitDetectionComponent;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogCombatCharacter, Log, All);
 
@@ -256,6 +257,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	ULockOnComponent* LockOnComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	UCombatHitDetectionComponent* HitDetectionComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))
 	UCombatAttributeSet* AttributeSet;

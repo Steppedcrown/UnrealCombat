@@ -242,12 +242,12 @@ Create in `Content/Animations/Montages/`:
 - [x] Assign `Profile_Character` to the `CapsuleComponent` on `BP_Player` and `BP_Enemy`
 
 ### UCombatHitDetectionComponent (C++)
-- [ ] Create C++ component `UCombatHitDetectionComponent`
-- [ ] Add `StartTrace()` and `StopTrace()` functions called by ability Active Frame notifies
-- [ ] In `TickComponent()` while tracing: perform a box sweep from the weapon bone's previous position to current position
-- [ ] Store already-hit actors in a `TArray<AActor*> HitActors` — clear on `StartTrace()`, skip on repeat hits
-- [ ] Broadcast an `OnHit` delegate with the hit result for abilities to bind to
-- [ ] Attach component to `ACombatCharacter` in C++
+- [x] Create C++ component `UCombatHitDetectionComponent`
+- [x] Add `StartTrace()` and `StopTrace()` functions called by ability Active Frame notifies
+- [x] In `TickComponent()` while tracing: perform a box sweep from the weapon bone's previous position to current position
+- [x] Store already-hit actors in a `TArray<AActor*> HitActors` — clear on `StartTrace()`, skip on repeat hits
+- [x] Broadcast an `OnHit` delegate with the hit result for abilities to bind to
+- [x] Attach component to `ACombatCharacter` in C++
 
 ### Debug Visualization
 - [ ] Add a console variable `combat.ShowHitboxes` (default `0`)

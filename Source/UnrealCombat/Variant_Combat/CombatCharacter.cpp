@@ -21,6 +21,7 @@
 #include "LockOnComponent.h"
 #include "CombatAttributeSet.h"
 #include "CombatMoveRegistry.h"
+#include "CombatHitDetectionComponent.h"
 
 DEFINE_LOG_CATEGORY(LogCombatCharacter);
 
@@ -60,7 +61,7 @@ void ACombatCharacter::PossessedBy(AController* NewController)
 	{
 		UE_LOG(LogCombatCharacter, Log, TEXT("  Spec: %s | AbilityTags: %s"),
 			*GetNameSafe(Spec.Ability),
-			*Spec.Ability->AbilityTags.ToStringSimple());
+			*Spec.Ability->GetAssetTags().ToStringSimple());
 	}
 }
 
@@ -113,6 +114,9 @@ ACombatCharacter::ACombatCharacter()
 
 	// create the lock-on component
 	LockOnComponent = CreateDefaultSubobject<ULockOnComponent>(TEXT("LockOnComponent"));
+
+	// create the hit detection component
+	HitDetectionComponent = CreateDefaultSubobject<UCombatHitDetectionComponent>(TEXT("HitDetectionComponent"));
 
 	// create the attribute set — registering it as a subobject is enough for the ASC to discover it
 	AttributeSet = CreateDefaultSubobject<UCombatAttributeSet>(TEXT("AttributeSet"));

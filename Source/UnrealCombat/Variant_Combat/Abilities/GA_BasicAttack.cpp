@@ -20,7 +20,11 @@ UGA_BasicAttack::UGA_BasicAttack()
 	ActivationOwnedTags.AddTag(FGameplayTag::RequestGameplayTag(FName("State.Combat.Attacking")));
 
 	// Identity tag — required for TryActivateAbilitiesByTag to find this ability
-	AbilityTags.AddTag(FGameplayTag::RequestGameplayTag(FName("Ability.BasicAttack")));
+	{
+		FGameplayTagContainer Tags;
+		Tags.AddTag(FGameplayTag::RequestGameplayTag(FName("Ability.BasicAttack")));
+		SetAssetTags(Tags);
+	}
 
 	// Default the move lookup tag — Blueprint child can override if needed
 	MoveTag = FGameplayTag::RequestGameplayTag(FName("Ability.BasicAttack"));
