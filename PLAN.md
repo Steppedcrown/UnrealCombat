@@ -261,7 +261,6 @@ Create in `Content/Animations/Montages/`:
 ### WBP_HUD
 - [ ] Create Widget Blueprint `WBP_HUD` in `Content/UI/`
 - [ ] Add a **health bar** (`UProgressBar`): bind fill percent to `Health / MaxHealth`
-- [ ] On health change: flash bar white briefly using an animation
 - [ ] Add **Node pips**: create a `UHorizontalBox` and dynamically spawn pip widgets based on `MaxNodes`
   - [ ] Regular Node: filled icon
   - [ ] Empty Node: grayed icon
