@@ -259,11 +259,11 @@ Create in `Content/Animations/Montages/`:
 ## Phase 8 — UI & HUD
 
 ### WBP_HUD
-- [ ] Create Widget Blueprint `WBP_HUD` in `Content/UI/`
-- [ ] Add a **health bar** (`UProgressBar`): bind fill percent to `Health / MaxHealth`
-- [ ] Add **Node pips**: create a `UHorizontalBox` and dynamically spawn pip widgets based on `MaxNodes`
-  - [ ] Regular Node: filled icon
-  - [ ] Empty Node: grayed icon
+- [x] Create Widget Blueprint `WBP_HUD` in `Content/UI/`
+- [x] Add a **health bar** (`UProgressBar`): bind fill percent to `Health / MaxHealth`
+- [x] Add **Node pips**: create a `UHorizontalBox` and dynamically spawn pip widgets based on `MaxNodes`
+  - [x] Regular Node: filled icon
+  - [x] Empty Node: grayed icon
   - [ ] Temp Node: distinct highlighted icon (takes precedence visually over regular pips)
 - [ ] Add a **lock-on reticle**: small crosshair or ring widget, set visibility based on `ULockOnComponent::bIsLocked`
 - [ ] Bind all values to GAS attribute change delegates (not Tick)
