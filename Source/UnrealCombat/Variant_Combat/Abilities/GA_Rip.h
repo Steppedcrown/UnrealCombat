@@ -74,6 +74,11 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category="Rip|Effects")
 	TSubclassOf<UGameplayEffect> ConsumeNodeEffectClass;
 
+	/** The TempNode duration GE class to remove when consuming TempNodes (e.g. GE_ApplyTempNode) */
+	UPROPERTY(EditDefaultsOnly, Category="Rip|Effects")
+	TSubclassOf<UGameplayEffect> TempNodeEffectClassToRemove;
+
+
 	/** Minor damage GE applied to target when NOT Vulnerable (e.g. GE_DamageHealth) */
 	UPROPERTY(EditDefaultsOnly, Category="Rip|Effects")
 	TSubclassOf<UGameplayEffect> DamageEffectClass;

@@ -60,7 +60,7 @@ bool UGA_Rip::CanActivateAbility(const FGameplayAbilitySpecHandle Handle,
 		return false;
 	}
 
-	return AttrSet->GetNodes() >= static_cast<float>(MoveData->NodeCost);
+	return (AttrSet->GetNodes() + AttrSet->GetTempNodes()) >= static_cast<float>(MoveData->NodeCost);
 }
 
 // ---------------------------------------------------------------------------
@@ -323,7 +323,26 @@ void UGA_Rip::ConsumeNodes()
 	FGameplayEffectContextHandle EffectContext = OwnerASC->MakeEffectContext();
 	EffectContext.AddSourceObject(GetAvatarActorFromActorInfo());
 
-	for (int32 i = 0; i < Cost; ++i)
+	// Consume TempNodes first by removing active Effect.TempNode duration GEs,
+	// then fall through to regular Nodes for the remainder
+	int32 Remaining = Cost;
+	{
+		const UCombatAttributeSet* AttrSet = OwnerASC->GetSet<UCombatAttributeSet>();
+		const int32 TempConsumed = AttrSet ? FMath::Min(Remaining, FMath::FloorToInt(AttrSet->GetTempNodes())) : 0;
+		if (TempConsumed > 0 && TempNodeEffectClassToRemove)
+		{
+			FGameplayEffectQuery Query;
+			const TSubclassOf<UGameplayEffect> ClassToMatch = TempNodeEffectClassToRemove;
+			Query.CustomMatchDelegate.BindLambda([ClassToMatch](const FActiveGameplayEffect& Effect)
+			{
+				return Effect.Spec.Def && Effect.Spec.Def->GetClass() == ClassToMatch;
+			});
+			const int32 ActuallyRemoved = OwnerASC->RemoveActiveEffects(Query, TempConsumed);
+			Remaining -= ActuallyRemoved;
+		}
+	}
+
+	for (int32 i = 0; i < Remaining; ++i)
 	{
 		const FGameplayEffectSpecHandle ConsumeSpec =
 			OwnerASC->MakeOutgoingSpec(ConsumeNodeEffectClass, GetAbilityLevel(), EffectContext);

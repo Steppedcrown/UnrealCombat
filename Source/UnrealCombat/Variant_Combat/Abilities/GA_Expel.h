@@ -75,6 +75,11 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category="Expel|Effects")
 	TSubclassOf<UGameplayEffect> ConsumeNodeEffectClass;
 
+	/** The TempNode duration GE class to remove when consuming TempNodes (e.g. GE_ApplyTempNode) */
+	UPROPERTY(EditDefaultsOnly, Category="Expel|Effects")
+	TSubclassOf<UGameplayEffect> TempNodeEffectClassToRemove;
+
+
 	/** Instant GE applied to the target on hit (e.g. GE_DamageHealth) */
 	UPROPERTY(EditDefaultsOnly, Category="Expel|Effects")
 	TSubclassOf<UGameplayEffect> DamageEffectClass;
