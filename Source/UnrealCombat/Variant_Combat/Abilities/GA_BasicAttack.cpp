@@ -225,6 +225,21 @@ void UGA_BasicAttack::ApplyHitEffects(AActor* HitActor)
 			OwnerASC->ApplyGameplayEffectSpecToSelf(*RestoreSpec.Data.Get());
 		}
 	}
+
+	// Apply temp node effect to self
+	if (TempNodeEffectClass)
+	{
+		FGameplayEffectContextHandle EffectContext = OwnerASC->MakeEffectContext();
+		EffectContext.AddSourceObject(GetAvatarActorFromActorInfo());
+
+		const FGameplayEffectSpecHandle TempNodeSpec =
+			OwnerASC->MakeOutgoingSpec(TempNodeEffectClass, GetAbilityLevel(), EffectContext);
+
+		if (TempNodeSpec.IsValid())
+		{
+			OwnerASC->ApplyGameplayEffectSpecToSelf(*TempNodeSpec.Data.Get());
+		}
+	}
 }
 
 // ---------------------------------------------------------------------------

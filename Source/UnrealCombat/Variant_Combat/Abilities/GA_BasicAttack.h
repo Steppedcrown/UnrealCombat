@@ -80,6 +80,10 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category="BasicAttack|Effects")
 	TSubclassOf<UGameplayEffect> NodeRestoreEffectClass;
 
+	/** Duration GE applied to self on each hit to add a TempNode (e.g. GE_ApplyTempNode) */
+	UPROPERTY(EditDefaultsOnly, Category="BasicAttack|Effects")
+	TSubclassOf<UGameplayEffect> TempNodeEffectClass;
+
 private:
 
 	// -----------------------------------------------------------------------
