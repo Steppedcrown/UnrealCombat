@@ -266,23 +266,8 @@ Create in `Content/Animations/Montages/`:
   - [x] Empty Node: grayed icon
   - [ ] Temp Node: distinct highlighted icon (takes precedence visually over regular pips)
 - [ ] Add a **lock-on reticle**: small crosshair or ring widget, set visibility based on `ULockOnComponent::bIsLocked`
-- [ ] Bind all values to GAS attribute change delegates (not Tick)
-- [ ] Add `WBP_HUD` to the viewport in the Player Controller's `BeginPlay`
-
-### WBP_PauseMenu
-- [ ] Create Widget Blueprint `WBP_PauseMenu` in `Content/UI/`
-- [ ] Add **Resume** button (removes widget, unpauses game)
-- [ ] Add **Move List** panel: loop over `DA_MoveRegistry` entries and create a row widget per move showing name, input, Node cost, and description
-- [ ] Add **Settings** button that opens `WBP_Settings` as a child widget
-- [ ] Add **Quit** button
-- [ ] Toggle pause menu on `Escape` / `Start` button press in Player Controller
-
-### WBP_Settings
-- [ ] Create Widget Blueprint `WBP_Settings` in `Content/UI/`
-- [ ] Add fullscreen toggle (checkbox or button)
-- [ ] Add camera sensitivity sliders (one for mouse, one for controller)
-- [ ] Add controller vibration toggle
-- [ ] Bind all controls to `UCombatSettings` (Phase 9)
+- [x] Bind all values to GAS attribute change delegates (not Tick)
+- [x] Add `WBP_HUD` to the viewport in the Player Controller's `BeginPlay`
 
 ### WBP_DeathScreen
 - [ ] Create Widget Blueprint `WBP_DeathScreen` in `Content/UI/`
@@ -291,20 +276,110 @@ Create in `Content/Animations/Montages/`:
 
 ---
 
-## Phase 9 — Settings
+## Phase 9 - Interupt System
 
-- [ ] Create C++ class `UCombatSettings` inheriting from `USaveGame`
-- [ ] Add properties: `bool bFullscreen`, `float MouseSensitivity`, `float ControllerSensitivity`, `bool bControllerVibration`
-- [ ] Create `UCombatSettingsSubsystem` (Game Instance Subsystem) to load/save settings:
-  - [ ] `LoadSettings()` — called on game startup, applies all settings
-  - [ ] `SaveSettings()` — called whenever a setting changes
-- [ ] Apply fullscreen via `UGameUserSettings::SetFullscreenMode()` + `ApplySettings()`
-- [ ] Apply sensitivity by updating the `IMC_Default` axis scalar at runtime
-- [ ] Wire `WBP_Settings` controls to `UCombatSettingsSubsystem`
+### UCombatMoveData — Add AttackWeight
+- [ ] In `CombatMoveData.h`, add `float AttackWeight` as a `UPROPERTY(EditAnywhere)` field (default `1.0f`)
+- [ ] Fill in `AttackWeight` on all existing Data Assets in `Content/Combat/MoveData/`:
+  - `DA_BasicAttack` — Weight `1.0` (light, easily cancelled)
+  - `DA_Block` — Weight `5.0` (blocking posture is hard to break)
+  - `DA_Expel` — Weight `2.0` (committed energy release)
+  - `DA_Rip` — Weight `0.0` (interupted by everything)
+
+### ACombatCharacter — Add CharacterWeight
+- [ ] In `CombatCharacter.h`, add `float CharacterWeight` as a `UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")` (default `1.0f`)
+  - This is the character's interrupt resistance when they are **not** in the middle of an attack
+  - Heavy enemy types should expose a higher value here via their Blueprint defaults
+
+### Interrupt Check Function
+- [ ] In `CombatCharacter.h`, declare `bool CanBeInterrupted(float IncomingWeight) const`
+- [ ] In `CombatCharacter.cpp`, implement the function:
+  - If the character has the `State.Combat.Attacking` tag active: look up the move tag on the currently active ability via `AbilitySystemComponent->GetActivatableAbilities()`, then retrieve its `UCombatMoveData` from the move registry and read its `AttackWeight`. Return `true` if `IncomingWeight >= AttackWeight`.
+  - If NOT attacking: return `true` if `IncomingWeight >= CharacterWeight`.
+- [ ] Expose this as a Blueprint-callable function so AI and Blueprint logic can query it
+
+### Ability Hit Handlers — Cancel on Interrupt
+- [ ] In each ability's `OnHitDetected()` handler (`GA_BasicAttack`, `GA_Expel`, `GA_Rip`):
+  - After hit detection resolves the target actor, cast it to `ACombatCharacter`
+  - Call `CanBeInterrupted(ThisMoveData->AttackWeight)` on the target
+  - If `true` and the target has `State.Combat.Attacking`: call `Target->GetAbilitySystemComponent()->CancelAbilitiesByTag(FGameplayTagContainer(AttackingTag))` to cancel the target's in-progress attack ability
+  - If `true` and the target is NOT attacking: proceed to play their hit reaction animation (see Hit Animations below)
+  - If `false`: still apply damage but skip the interrupt/stagger (heavier attacks still deal damage, they just don't flinch)
+
+### Gameplay Tags
+- [ ] Add `State.Combat.Interrupted` tag to Project Settings → GameplayTags
+- [ ] In `GA_BasicAttack::EndAbility()` (and all attack abilities): if `bWasCancelled`, check for `State.Combat.Interrupted` and skip node restore (interrupted attacks should not reward the attacker)
+- [ ] When an attack is cancelled by interrupt: apply the `State.Combat.Interrupted` tag briefly (0.2 s) to prevent immediate reactivation during the stagger window
 
 ---
 
-## Phase 10 — Polish (SFX, VFX, Juice)
+## Phase 10 - Advanced Animations
+
+### Attack Animation Improvements
+- [ ] Reconcile root motion animations with camera and player position
+
+### EHitDirection Enum
+- [ ] In a new header `Content/Animations/` or alongside `CombatCharacter.h`, declare `UENUM(BlueprintType) enum class EHitDirection : uint8 { Front, Back, Left, Right }`
+
+### Direction Calculation Function
+- [ ] In `CombatCharacter.h`, declare `EHitDirection CalculateHitDirection(const FVector& HitSourceLocation) const`
+- [ ] In `CombatCharacter.cpp`, implement it:
+  - Compute `FVector ToSource = (HitSourceLocation - GetActorLocation()).GetSafeNormal2D()`
+  - Compute dot products against `GetActorForwardVector()` and `GetActorRightVector()`
+  - If `Dot(Forward, ToSource) > 0.5`: attack came from the front → return `EHitDirection::Front`
+  - If `Dot(Forward, ToSource) < -0.5`: attack came from behind → return `EHitDirection::Back`
+  - If `Dot(Right, ToSource) > 0`: attack came from the right → return `EHitDirection::Right`
+  - Else: return `EHitDirection::Left`
+
+### Hit Reaction Montages
+Create in `Content/Animations/Montages/HitReactions/`:
+- [ ] `AM_HitReact_Front` — Character was struck from the front; stagger/stumble backward; upper body snaps back, feet may lift
+- [ ] `AM_HitReact_Back` — Character was struck from behind; lurch forward, arms out for balance
+- [ ] `AM_HitReact_Left` — Character was struck from the left; body rotates/staggers right
+- [ ] `AM_HitReact_Right` — Character was struck from the right; body rotates/staggers left
+- [ ] `AM_KnockdownFront` — Heavy hit from front; full fall backward (used when `IncomingWeight` is large, e.g. >= 3.0)
+- [ ] `AM_KnockdownBack` — Heavy hit from behind; full fall forward
+
+### ACombatCharacter — PlayHitReaction
+- [ ] In `CombatCharacter.h`, declare `void PlayHitReaction(EHitDirection Direction, float IncomingWeight)`
+- [ ] In `CombatCharacter.cpp`, implement it:
+  - Add `UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat|HitReactions")` references for all six montages above as `UAnimMontage*` fields: `HitReactFrontMontage`, `HitReactBackMontage`, `HitReactLeftMontage`, `HitReactRightMontage`, `KnockdownFrontMontage`, `KnockdownBackMontage`
+  - Add `float HeavyHitWeightThreshold = 3.0f` as an editable property (weight at or above this value triggers the full knockdown instead of a light stagger)
+  - Based on `Direction` and whether `IncomingWeight >= HeavyHitWeightThreshold`, select the appropriate montage
+  - Play it via `GetMesh()->GetAnimInstance()->Montage_Play()` at the full slot so it overrides locomotion
+- [ ] Assign all six montages in `BP_Player` and `BP_Enemy` Blueprint defaults
+
+### Integrate with Damage Flow
+- [ ] In `UCombatHitDetectionComponent::OnHit` broadcast (or the receiving ability's hit handler), after calling `CanBeInterrupted()`:
+  - Compute attacker world location from the `FHitResult` (use `HitResult.TraceStart` or the owning character's location)
+  - Call `Target->CalculateHitDirection(AttackerLocation)`
+  - Call `Target->PlayHitReaction(Direction, IncomingWeight)`
+- [ ] If the target's attack was cancelled by the interrupt, also call `PlayHitReaction` so the cancel is visually confirmed
+
+---
+
+## Phase 11 — Enemy AI
+
+### ACombatEnemy
+- [ ] Create Blueprint `BP_Enemy` (already created in Phase 2) — confirm it inherits `ACombatCharacter` and has all GAS components
+- [ ] Create an **AI Controller** `AIC_CombatEnemy` and assign it to `BP_Enemy`
+- [ ] Create a **Blackboard** `BB_CombatEnemy` with keys: `TargetActor` (Object), `bCanAttack` (Bool), `DistanceToTarget` (Float)
+
+### Behavior Tree
+- [ ] Create **Behavior Tree** `BT_CombatEnemy` in `Content/Characters/Enemy/`
+- [ ] Implement the following structure:
+  - [ ] **Selector (root)**
+    - [ ] **Dead sequence**: check `State.Status.Dead` tag → play death montage → destroy
+    - [ ] **Attack sequence**: check `bCanAttack` and `DistanceToTarget < AttackRange` → activate `GA_BasicAttack` → set cooldown on `bCanAttack`
+    - [ ] **Chase sequence**: move toward `TargetActor` using `MoveTo` task
+    - [ ] **Idle**: play idle animation, look around
+- [ ] Create a **BTService** `BTS_UpdateTargetInfo` that runs each tick to update `TargetActor` and `DistanceToTarget`
+- [ ] Create a **BTTask** `BTT_ActivateAbility` that triggers a given `UGameplayAbility` on the enemy's ASC
+- [ ] In `AIC_CombatEnemy::OnPossess()`, run the behavior tree and populate `TargetActor` with the player
+
+---
+
+## Phase 12 — Polish (SFX, VFX, Juice)
 
 ### VFX (Niagara)
 Create in `Content/VFX/`:
@@ -347,28 +422,36 @@ Create in `Content/Core/CameraShakes/`:
 
 ---
 
-## Phase 11 — Enemy AI
+## Phase 13 — Menus
 
-### ACombatEnemy
-- [ ] Create Blueprint `BP_Enemy` (already created in Phase 2) — confirm it inherits `ACombatCharacter` and has all GAS components
-- [ ] Create an **AI Controller** `AIC_CombatEnemy` and assign it to `BP_Enemy`
-- [ ] Create a **Blackboard** `BB_CombatEnemy` with keys: `TargetActor` (Object), `bCanAttack` (Bool), `DistanceToTarget` (Float)
+### WBP_PauseMenu
+- [ ] Create Widget Blueprint `WBP_PauseMenu` in `Content/UI/`
+- [ ] Add **Resume** button (removes widget, unpauses game)
+- [ ] Add **Move List** panel: loop over `DA_MoveRegistry` entries and create a row widget per move showing name, input, Node cost, and description
+- [ ] Add **Settings** button that opens `WBP_Settings` as a child widget
+- [ ] Add **Quit** button
+- [ ] Toggle pause menu on `Escape` / `Start` button press in Player Controller
 
-### Behavior Tree
-- [ ] Create **Behavior Tree** `BT_CombatEnemy` in `Content/Characters/Enemy/`
-- [ ] Implement the following structure:
-  - [ ] **Selector (root)**
-    - [ ] **Dead sequence**: check `State.Status.Dead` tag → play death montage → destroy
-    - [ ] **Attack sequence**: check `bCanAttack` and `DistanceToTarget < AttackRange` → activate `GA_BasicAttack` → set cooldown on `bCanAttack`
-    - [ ] **Chase sequence**: move toward `TargetActor` using `MoveTo` task
-    - [ ] **Idle**: play idle animation, look around
-- [ ] Create a **BTService** `BTS_UpdateTargetInfo` that runs each tick to update `TargetActor` and `DistanceToTarget`
-- [ ] Create a **BTTask** `BTT_ActivateAbility` that triggers a given `UGameplayAbility` on the enemy's ASC
-- [ ] In `AIC_CombatEnemy::OnPossess()`, run the behavior tree and populate `TargetActor` with the player
+### WBP_Settings
+- [ ] Create Widget Blueprint `WBP_Settings` in `Content/UI/`
+- [ ] Add fullscreen toggle (checkbox or button)
+- [ ] Add camera sensitivity sliders (one for mouse, one for controller)
+- [ ] Add controller vibration toggle
+- [ ] Bind all controls to `UCombatSettings` (Phase 9)
+
+### Settings
+- [ ] Create C++ class `UCombatSettings` inheriting from `USaveGame`
+- [ ] Add properties: `bool bFullscreen`, `float MouseSensitivity`, `float ControllerSensitivity`, `bool bControllerVibration`
+- [ ] Create `UCombatSettingsSubsystem` (Game Instance Subsystem) to load/save settings:
+  - [ ] `LoadSettings()` — called on game startup, applies all settings
+  - [ ] `SaveSettings()` — called whenever a setting changes
+- [ ] Apply fullscreen via `UGameUserSettings::SetFullscreenMode()` + `ApplySettings()`
+- [ ] Apply sensitivity by updating the `IMC_Default` axis scalar at runtime
+- [ ] Wire `WBP_Settings` controls to `UCombatSettingsSubsystem`
 
 ---
 
-## Phase 12 — Debug & QA
+## Phase 14 — Debug & QA
 
 ### Debug Mode
 - [ ] Register console variable `combat.Debug` (default `0`) in a C++ module startup
@@ -386,6 +469,7 @@ Create in `Content/Core/CameraShakes/`:
   - [ ] Grant 5 Nodes instantly
   - [ ] Drain enemy Nodes to 0 (to test Rip execution)
   - [ ] Toggle `combat.Debug`
+  - [ ] Toggle for enemy ai
 
 ### QA Checklist
 - [ ] Rip on enemy with `>= 1` Node: steals Nodes, deals minor damage
