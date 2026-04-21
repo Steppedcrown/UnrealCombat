@@ -2,7 +2,6 @@
 
 #include "LockOnComponent.h"
 #include "CombatCharacter.h"
-#include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/Pawn.h"
 #include "GameFramework/Controller.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -13,17 +12,6 @@ ULockOnComponent::ULockOnComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
 	PrimaryComponentTick.bStartWithTickEnabled = false;
-}
-
-void ULockOnComponent::BeginPlay()
-{
-	Super::BeginPlay();
-
-	// cache the owner's spring arm
-	if (ACombatCharacter* Owner = Cast<ACombatCharacter>(GetOwner()))
-	{
-		CameraBoom = Owner->GetCameraBoom();
-	}
 }
 
 void ULockOnComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -37,24 +25,32 @@ void ULockOnComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 		return;
 	}
 
-	if (!CameraBoom)
-	{
-		return;
-	}
-
-	// rotate the spring arm smoothly toward the target
 	const FVector OwnerLocation = GetOwner()->GetActorLocation();
 	const FVector TargetLocation = TargetActor->GetActorLocation();
 	const FRotator DesiredRotation = UKismetMathLibrary::FindLookAtRotation(OwnerLocation, TargetLocation);
-	const FRotator SmoothedRotation = FMath::RInterpTo(CameraBoom->GetComponentRotation(), DesiredRotation, DeltaTime, LockOnInterpSpeed);
 
-	if (APawn* OwnerPawn = Cast<APawn>(GetOwner()))
+	APawn* OwnerPawn = Cast<APawn>(GetOwner());
+	AController* Controller = OwnerPawn ? OwnerPawn->GetController() : nullptr;
+
+	if (bDebugAcquire)
 	{
-		if (AController* Controller = OwnerPawn->GetController())
-		{
-			Controller->SetControlRotation(SmoothedRotation);
-		}
+		UE_LOG(LogTemp, Warning, TEXT("LockOn Tick — Controller: %s | DesiredYaw: %.1f"),
+			Controller ? TEXT("valid") : TEXT("NULL"),
+			DesiredRotation.Yaw);
 	}
+
+	if (Controller)
+	{
+		const FRotator Current = Controller->GetControlRotation();
+		const FRotator Smoothed = FMath::RInterpTo(Current, DesiredRotation, DeltaTime, LockOnInterpSpeed);
+		Controller->SetControlRotation(Smoothed);
+	}
+
+	// keep the character yaw facing the target
+	const FRotator CurrentYaw = GetOwner()->GetActorRotation();
+	const FRotator TargetYaw(0.0f, DesiredRotation.Yaw, 0.0f);
+	const FRotator SmoothedYaw = FMath::RInterpTo(CurrentYaw, TargetYaw, DeltaTime, LockOnInterpSpeed);
+	GetOwner()->SetActorRotation(SmoothedYaw);
 }
 
 void ULockOnComponent::ToggleLockOn()

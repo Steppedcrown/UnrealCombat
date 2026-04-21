@@ -7,7 +7,6 @@
 #include "LockOnComponent.generated.h"
 
 class ACombatCharacter;
-class USpringArmComponent;
 
 /**
  *  Handles lock-on targeting for ACombatCharacter.
@@ -52,7 +51,6 @@ public:
 
 protected:
 
-	virtual void BeginPlay() override;
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 private:
@@ -61,9 +59,6 @@ private:
 	UPROPERTY()
 	TObjectPtr<ACombatCharacter> TargetActor;
 
-	/** Cached spring arm on the owner */
-	UPROPERTY()
-	TObjectPtr<USpringArmComponent> CameraBoom;
 
 	/** Searches for and locks onto the best candidate target. Returns true if a target was found. */
 	bool AcquireTarget();
