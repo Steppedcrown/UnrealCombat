@@ -40,6 +40,10 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Lock-On")
 	bool bIsLocked = false;
 
+	/** Draw debug shapes for lock-on acquisition each time ToggleLockOn is called */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Lock-On|Debug")
+	bool bDebugAcquire = false;
+
 	/** Toggles lock-on on/off. Called from ACombatCharacter::LockOnPressed(). */
 	void ToggleLockOn();
 

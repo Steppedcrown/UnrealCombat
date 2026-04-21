@@ -217,9 +217,8 @@ void ACombatCharacter::DoMove(float Right, float Forward)
 
 void ACombatCharacter::DoLook(float Yaw, float Pitch)
 {
-	if (GetController() != nullptr)
+	if (GetController() != nullptr && !LockOnComponent->bIsLocked)
 	{
-		// add yaw and pitch input to controller
 		AddControllerYawInput(Yaw);
 		AddControllerPitchInput(Pitch);
 	}
