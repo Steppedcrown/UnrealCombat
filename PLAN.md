@@ -264,7 +264,7 @@ Create in `Content/Animations/Montages/`:
 - [x] Add **Node pips**: create a `UHorizontalBox` and dynamically spawn pip widgets based on `MaxNodes`
   - [x] Regular Node: filled icon
   - [x] Empty Node: grayed icon
-  - [ ] Temp Node: distinct highlighted icon (takes precedence visually over regular pips)
+  - [x] Temp Node: distinct highlighted icon (takes precedence visually over regular pips)
 - [ ] Add a **lock-on reticle**: small crosshair or ring widget, set visibility based on `ULockOnComponent::bIsLocked`
 - [x] Bind all values to GAS attribute change delegates (not Tick)
 - [x] Add `WBP_HUD` to the viewport in the Player Controller's `BeginPlay`
