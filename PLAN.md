@@ -265,7 +265,7 @@ Create in `Content/Animations/Montages/`:
   - [x] Regular Node: filled icon
   - [x] Empty Node: grayed icon
   - [x] Temp Node: distinct highlighted icon (takes precedence visually over regular pips)
-- [ ] Add a **lock-on reticle**: small crosshair or ring widget, set visibility based on `ULockOnComponent::bIsLocked`
+- [x] Add a **lock-on reticle**: small crosshair or ring widget, set visibility based on `ULockOnComponent::bIsLocked`
 - [x] Bind all values to GAS attribute change delegates (not Tick)
 - [x] Add `WBP_HUD` to the viewport in the Player Controller's `BeginPlay`
 

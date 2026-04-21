@@ -3,14 +3,10 @@
 
 #include "CombatCharacter.h"
 #include "Components/CapsuleComponent.h"
-#include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "GameFramework/SpringArmComponent.h"
 #include "Components/SkeletalMeshComponent.h"
-#include "Camera/CameraComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
-#include "CombatLifeBar.h"
 #include "Engine/DamageEvents.h"
 #include "TimerManager.h"
 #include "Engine/LocalPlayer.h"
@@ -84,27 +80,6 @@ ACombatCharacter::ACombatCharacter()
 	// Configure character movement
 	GetCharacterMovement()->MaxWalkSpeed = 400.0f;
 
-	// create the camera boom
-	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
-	CameraBoom->SetupAttachment(RootComponent);
-
-	CameraBoom->TargetArmLength = DefaultCameraDistance;
-	CameraBoom->bUsePawnControlRotation = true;
-	CameraBoom->bEnableCameraLag = true;
-	CameraBoom->bEnableCameraRotationLag = true;
-
-	// create the orbiting camera
-	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
-	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
-	FollowCamera->bUsePawnControlRotation = false;
-
-	// create the life bar widget component
-	LifeBar = CreateDefaultSubobject<UWidgetComponent>(TEXT("LifeBar"));
-	LifeBar->SetupAttachment(RootComponent);
-
-	// set the player tag
-	Tags.Add(FName("Player"));
-
 	// create the ability system component
 	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 	AbilitySystemComponent->SetIsReplicated(true);
@@ -155,12 +130,6 @@ void ACombatCharacter::ChargedAttackReleased()
 {
 	// route the input
 	DoChargedAttackEnd();
-}
-
-void ACombatCharacter::ToggleCamera()
-{
-	// call the BP hook
-	BP_ToggleCamera();
 }
 
 void ACombatCharacter::BlockPressed()
@@ -539,12 +508,6 @@ void ACombatCharacter::HandleDeath()
 	// enable full ragdoll physics
 	GetMesh()->SetSimulatePhysics(true);
 
-	// hide the life bar
-	LifeBar->SetHiddenInGame(true);
-
-	// pull back the camera
-	GetCameraBoom()->TargetArmLength = DeathCameraDistance;
-
 	// schedule respawning
 	GetWorld()->GetTimerManager().SetTimer(RespawnTimer, this, &ACombatCharacter::RespawnCharacter, RespawnTime, false);
 }
@@ -609,12 +572,6 @@ void ACombatCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// initialize the camera
-	if (CameraBoom)
-	{
-		CameraBoom->TargetArmLength = DefaultCameraDistance;
-	}
-
 	// save the relative transform for the mesh so we can reset the ragdoll later
 	MeshStartingTransform = GetMesh()->GetRelativeTransform();
 
@@ -650,9 +607,6 @@ void ACombatCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		// Charged Attack
 		EnhancedInputComponent->BindAction(ChargedAttackAction, ETriggerEvent::Started, this, &ACombatCharacter::ChargedAttackPressed);
 		EnhancedInputComponent->BindAction(ChargedAttackAction, ETriggerEvent::Completed, this, &ACombatCharacter::ChargedAttackReleased);
-
-		// Camera Side Toggle
-		EnhancedInputComponent->BindAction(ToggleCameraAction, ETriggerEvent::Triggered, this, &ACombatCharacter::ToggleCamera);
 
 		// Block
 		EnhancedInputComponent->BindAction(BlockAction, ETriggerEvent::Started, this, &ACombatCharacter::BlockPressed);

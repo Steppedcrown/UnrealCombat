@@ -10,12 +10,8 @@
 #include "AbilitySystemInterface.h"
 #include "CombatCharacter.generated.h"
 
-class USpringArmComponent;
-class UCameraComponent;
 class UInputAction;
 struct FInputActionValue;
-class UCombatLifeBar;
-class UWidgetComponent;
 class UAbilitySystemComponent;
 class UGameplayAbility;
 class UMotionWarpingComponent;
@@ -39,18 +35,6 @@ class ACombatCharacter : public ACharacter, public ICombatAttacker, public IComb
 {
 	GENERATED_BODY()
 
-	/** Camera boom positioning the camera behind the character */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
-	USpringArmComponent* CameraBoom;
-
-	/** Follow camera */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
-	UCameraComponent* FollowCamera;
-
-	/** Life bar widget component */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
-	UWidgetComponent* LifeBar;
-	
 protected:
 
 	/** Jump Input Action */
@@ -77,10 +61,6 @@ protected:
 	UPROPERTY(EditAnywhere, Category ="Input")
 	UInputAction* ChargedAttackAction;
 
-	/** Toggle Camera Side Input Action */
-	UPROPERTY(EditAnywhere, Category ="Input")
-	UInputAction* ToggleCameraAction;
-
 	/** Block Input Action */
 	UPROPERTY(EditAnywhere, Category="Input")
 	UInputAction* BlockAction;
@@ -105,17 +85,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category="Damage")
 	float CurrentHP = 0.0f;
 
-	/** Life bar widget fill color */
-	UPROPERTY(EditAnywhere, Category="Damage")
-	FLinearColor LifeBarColor;
-
 	/** Name of the pelvis bone, for damage ragdoll physics */
 	UPROPERTY(EditAnywhere, Category="Damage")
 	FName PelvisBoneName;
-
-	/** Pointer to the life bar widget */
-	UPROPERTY(EditAnywhere, Category="Damage")
-	TObjectPtr<UCombatLifeBar> LifeBarWidget;
 
 	/** Max amount of time that may elapse for a non-combo attack input to not be considered stale */
 	UPROPERTY(EditAnywhere, Category="Melee Attack", meta = (ClampMin = 0, ClampMax = 5, Units = "s"))
@@ -208,14 +180,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category="Combat|Abilities")
 	TSubclassOf<UGameplayAbility> RipAbilityClass;
 
-	/** Camera boom length while the character is dead */
-	UPROPERTY(EditAnywhere, Category="Camera", meta = (ClampMin = 0, ClampMax = 1000, Units = "cm"))
-	float DeathCameraDistance = 400.0f;
-
-	/** Camera boom length when the character respawns */
-	UPROPERTY(EditAnywhere, Category="Camera", meta = (ClampMin = 0, ClampMax = 1000, Units = "cm"))
-	float DefaultCameraDistance = 100.0f;
-
 	/** Time to wait before respawning the character */
 	UPROPERTY(EditAnywhere, Category="Respawn", meta = (ClampMin = 0, ClampMax = 10, Units = "s"))
 	float RespawnTime = 3.0f;
@@ -281,9 +245,6 @@ protected:
 	/** Called for combo attack input released */
 	void ChargedAttackReleased();
 
-	/** Called for toggle camera side input */
-	void ToggleCamera();
-
 	/** Called for block input */
 	void BlockPressed();
 
@@ -295,10 +256,6 @@ protected:
 
 	/** Called for lock-on input */
 	void LockOnPressed();
-
-	/** BP hook to animate the camera side switch */
-	UFUNCTION(BlueprintImplementableEvent, Category="Combat")
-	void BP_ToggleCamera();
 
 public:
 
@@ -417,12 +374,6 @@ protected:
 	virtual void NotifyControllerChanged() override;
 
 public:
-
-	/** Returns CameraBoom subobject **/
-	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
-
-	/** Returns FollowCamera subobject **/
-	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
 	/** Returns the move registry, used by abilities to look up move data at runtime */
 	FORCEINLINE UCombatMoveRegistry* GetMoveRegistry() const { return MoveRegistry; }
