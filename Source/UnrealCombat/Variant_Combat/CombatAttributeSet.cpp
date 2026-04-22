@@ -31,17 +31,19 @@ void UCombatAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 
 	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("  Health changed: %.1f / %.1f"), GetHealth(), GetMaxHealth());
-		// If this is incoming damage (negative modifier) and the owner is blocking,
-		// negate the change and fire an event so UGA_Block can detect a perfect block.
 		const FGameplayTag BlockingTag = FGameplayTag::RequestGameplayTag(FName("State.Combat.Blocking"));
-		if (Data.EvaluatedData.Magnitude < 0.0f && ASC->HasMatchingGameplayTag(BlockingTag))
+		const bool bOwnerIsBlocking = ASC->HasMatchingGameplayTag(BlockingTag);
+
+		UE_LOG(LogTemp, Warning, TEXT("  Health after GAS modifier: %.1f | magnitude=%.2f | blocking=%s"),
+			GetHealth(), Data.EvaluatedData.Magnitude,
+			bOwnerIsBlocking ? TEXT("YES — damage will be restored!") : TEXT("no"));
+
+		if (Data.EvaluatedData.Magnitude < 0.0f && bOwnerIsBlocking)
 		{
-			// Restore health to its pre-effect value
 			const float RestoredHealth = FMath::Clamp(GetHealth() - Data.EvaluatedData.Magnitude, 0.0f, GetMaxHealth());
 			SetHealth(RestoredHealth);
+			UE_LOG(LogTemp, Warning, TEXT("  Block restored health to: %.1f"), GetHealth());
 
-			// Notify UGA_Block that a hit was absorbed so it can check the perfect block window
 			const FGameplayTag BlockHitTag = FGameplayTag::RequestGameplayTag(FName("Event.Block.Hit"), /*bErrorIfNotFound=*/false);
 			if (BlockHitTag.IsValid())
 			{
@@ -52,8 +54,8 @@ void UCombatAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 			return;
 		}
 
-		// clamp health
 		SetHealth(FMath::Clamp(GetHealth(), 0.0f, GetMaxHealth()));
+		UE_LOG(LogTemp, Warning, TEXT("  Final health: %.1f"), GetHealth());
 
 		// reduce MaxNodes by 1 for each 20% health threshold crossed below full health
 		// e.g. 79% health = -1, 59% = -2, 39% = -3, 19% = -4

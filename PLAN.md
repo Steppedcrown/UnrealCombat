@@ -268,6 +268,7 @@ Create in `Content/Animations/Montages/`:
 - [x] Add a **lock-on reticle**: small crosshair or ring widget, set visibility based on `ULockOnComponent::bIsLocked`
 - [x] Bind all values to GAS attribute change delegates (not Tick)
 - [x] Add `WBP_HUD` to the viewport in the Player Controller's `BeginPlay`
+- [ ] Fix backwards effects (basic attack/expel restore nodes for enemy, etc...)
 
 ### WBP_DeathScreen
 - [ ] Create Widget Blueprint `WBP_DeathScreen` in `Content/UI/`
