@@ -78,11 +78,11 @@ protected:
 	UInputAction* LockOnAction;
 
 	/** Max amount of HP the character will have on respawn */
-	UPROPERTY(EditAnywhere, Category="Damage", meta = (ClampMin = 0, ClampMax = 100))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Damage", meta = (ClampMin = 0, ClampMax = 100))
 	float MaxHP = 5.0f;
 
 	/** Current amount of HP the character has */
-	UPROPERTY(VisibleAnywhere, Category="Damage")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Damage")
 	float CurrentHP = 0.0f;
 
 	/** Name of the pelvis bone, for damage ragdoll physics */
