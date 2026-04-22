@@ -356,23 +356,22 @@ void ACombatCharacter::DoAttackTrace(FName DamageSourceBone)
 	FCollisionQueryParams QueryParams;
 	QueryParams.AddIgnoredActor(this);
 
-	if (GetWorld()->SweepMultiByObjectType(OutHits, TraceStart, TraceEnd, FQuat::Identity, ObjectParams, CollisionShape, QueryParams))
+	const bool bHit = GetWorld()->SweepMultiByObjectType(OutHits, TraceStart, TraceEnd, FQuat::Identity, ObjectParams, CollisionShape, QueryParams);
+	UE_LOG(LogCombatCharacter, Warning, TEXT("DoAttackTrace: bone=%s hits=%d"), *DamageSourceBone.ToString(), OutHits.Num());
+
+	if (bHit)
 	{
-		// iterate over each object hit
 		for (const FHitResult& CurrentHit : OutHits)
 		{
-			// check if we've hit a damageable actor
 			ICombatDamageable* Damageable = Cast<ICombatDamageable>(CurrentHit.GetActor());
+			UE_LOG(LogCombatCharacter, Warning, TEXT("  Hit: %s | Damageable=%s"),
+				*GetNameSafe(CurrentHit.GetActor()),
+				Damageable ? TEXT("yes") : TEXT("no"));
 
 			if (Damageable)
 			{
-				// knock upwards and away from the impact normal
 				const FVector Impulse = (CurrentHit.ImpactNormal * -MeleeKnockbackImpulse) + (FVector::UpVector * MeleeLaunchImpulse);
-
-				// pass the damage event to the actor
 				Damageable->ApplyDamage(MeleeDamage, this, CurrentHit.ImpactPoint, Impulse);
-
-				// call the BP handler to play effects, etc.
 				DealtDamage(MeleeDamage, CurrentHit.ImpactPoint);
 			}
 		}
@@ -477,11 +476,14 @@ void ACombatCharacter::NotifyEnemiesOfIncomingAttack()
 
 void ACombatCharacter::ApplyDamage(float Damage, AActor* DamageCauser, const FVector& DamageLocation, const FVector& DamageImpulse)
 {
-	// pass the damage event to the actor
+	UE_LOG(LogCombatCharacter, Warning, TEXT("ApplyDamage: %s received %.1f damage from %s | HP before=%.1f"),
+		*GetName(), Damage, *GetNameSafe(DamageCauser), CurrentHP);
+
 	FDamageEvent DamageEvent;
 	const float ActualDamage = TakeDamage(Damage, DamageEvent, nullptr, DamageCauser);
 
-	// only process knockback and effects if we received nonzero damage
+	UE_LOG(LogCombatCharacter, Warning, TEXT("ApplyDamage: ActualDamage=%.1f | HP after=%.1f"), ActualDamage, CurrentHP);
+
 	if (ActualDamage > 0.0f)
 	{
 		// apply the knockback impulse
@@ -530,19 +532,18 @@ void ACombatCharacter::RespawnCharacter()
 
 float ACombatCharacter::TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-	// only process damage if the character is still alive
 	if (CurrentHP <= 0.0f)
 	{
+		UE_LOG(LogCombatCharacter, Warning, TEXT("TakeDamage: %s is already dead, ignoring %.1f damage"), *GetName(), Damage);
 		return 0.0f;
 	}
 
-	// reduce the current HP
 	CurrentHP -= Damage;
+	UE_LOG(LogCombatCharacter, Warning, TEXT("TakeDamage: %s HP=%.1f/%.1f"), *GetName(), CurrentHP, MaxHP);
 
-	// have we run out of HP?
 	if (CurrentHP <= 0.0f)
 	{
-		// die
+		UE_LOG(LogCombatCharacter, Warning, TEXT("TakeDamage: %s died"), *GetName());
 		HandleDeath();
 	}
 	else
@@ -631,5 +632,27 @@ void ACombatCharacter::NotifyControllerChanged()
 	{
 		PC->SetRespawnTransform(GetActorTransform());
 	}
+}
+
+float ACombatCharacter::GetHealth() const
+{
+	const float Val = AttributeSet ? AttributeSet->GetHealth() : 0.0f;
+	UE_LOG(LogCombatCharacter, Verbose, TEXT("GetHealth: %s = %.1f"), *GetName(), Val);
+	return Val;
+}
+
+float ACombatCharacter::GetMaxHealth() const
+{
+	return AttributeSet ? AttributeSet->GetMaxHealth() : 1.0f;
+}
+
+float ACombatCharacter::GetNodes() const
+{
+	return AttributeSet ? AttributeSet->GetNodes() : 0.0f;
+}
+
+float ACombatCharacter::GetMaxNodes() const
+{
+	return AttributeSet ? AttributeSet->GetMaxNodes() : 1.0f;
 }
 

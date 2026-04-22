@@ -24,8 +24,14 @@ void UCombatAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 		return;
 	}
 
+	UE_LOG(LogTemp, Warning, TEXT("PostGEExecute: owner=%s attribute=%s magnitude=%.2f"),
+		*GetNameSafe(GetOwningActor()),
+		*Data.EvaluatedData.Attribute.GetName(),
+		Data.EvaluatedData.Magnitude);
+
 	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
 	{
+		UE_LOG(LogTemp, Warning, TEXT("  Health changed: %.1f / %.1f"), GetHealth(), GetMaxHealth());
 		// If this is incoming damage (negative modifier) and the owner is blocking,
 		// negate the change and fire an event so UGA_Block can detect a perfect block.
 		const FGameplayTag BlockingTag = FGameplayTag::RequestGameplayTag(FName("State.Combat.Blocking"));

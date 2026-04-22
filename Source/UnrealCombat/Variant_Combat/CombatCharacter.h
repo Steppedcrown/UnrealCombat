@@ -377,4 +377,16 @@ public:
 
 	/** Returns the move registry, used by abilities to look up move data at runtime */
 	FORCEINLINE UCombatMoveRegistry* GetMoveRegistry() const { return MoveRegistry; }
+
+	UFUNCTION(BlueprintPure, Category="Attributes")
+	float GetHealth() const;
+
+	UFUNCTION(BlueprintPure, Category="Attributes")
+	float GetMaxHealth() const;
+
+	UFUNCTION(BlueprintPure, Category="Attributes")
+	float GetNodes() const;
+
+	UFUNCTION(BlueprintPure, Category="Attributes")
+	float GetMaxNodes() const;
 };
