@@ -189,6 +189,7 @@ void UGA_BasicAttack::ApplyHitEffects(AActor* HitActor)
 	UAbilitySystemComponent* OwnerASC = GetAbilitySystemComponentFromActorInfo();
 	if (!OwnerASC)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("ApplyHitEffects: OwnerASC is NULL"));
 		return;
 	}
 
@@ -196,6 +197,11 @@ void UGA_BasicAttack::ApplyHitEffects(AActor* HitActor)
 	if (DamageEffectClass)
 	{
 		UAbilitySystemComponent* TargetASC = HitActor->FindComponentByClass<UAbilitySystemComponent>();
+		UE_LOG(LogTemp, Warning, TEXT("ApplyHitEffects: target=%s TargetASC=%s DamageEffectClass=%s"),
+			*GetNameSafe(HitActor),
+			TargetASC ? TEXT("found") : TEXT("NULL — enemy has no ASC or it's not initialized"),
+			*GetNameSafe(DamageEffectClass));
+
 		if (TargetASC)
 		{
 			FGameplayEffectContextHandle EffectContext = OwnerASC->MakeEffectContext();
@@ -204,9 +210,16 @@ void UGA_BasicAttack::ApplyHitEffects(AActor* HitActor)
 			const FGameplayEffectSpecHandle DamageSpec =
 				OwnerASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), EffectContext);
 
+			UE_LOG(LogTemp, Warning, TEXT("ApplyHitEffects: DamageSpec valid=%s magnitude=%.2f"),
+				DamageSpec.IsValid() ? TEXT("yes") : TEXT("no"),
+				DamageSpec.IsValid() ? DamageSpec.Data->GetLevel() : -1.f);
+
 			if (DamageSpec.IsValid())
 			{
-				OwnerASC->ApplyGameplayEffectSpecToTarget(*DamageSpec.Data.Get(), TargetASC);
+				const FActiveGameplayEffectHandle Result =
+					OwnerASC->ApplyGameplayEffectSpecToTarget(*DamageSpec.Data.Get(), TargetASC);
+				UE_LOG(LogTemp, Warning, TEXT("ApplyHitEffects: effect applied, handle valid=%s"),
+					Result.IsValid() ? TEXT("yes") : TEXT("NO — effect was rejected"));
 			}
 		}
 	}

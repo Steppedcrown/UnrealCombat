@@ -13,6 +13,7 @@
 class UInputAction;
 struct FInputActionValue;
 class UAbilitySystemComponent;
+class UCombatAttributeSet;
 class UGameplayAbility;
 class UMotionWarpingComponent;
 class ULockOnComponent;
@@ -256,6 +257,9 @@ protected:
 
 	/** Called for lock-on input */
 	void LockOnPressed();
+
+	/** Returns the AttributeSet registered with the ASC — always the correct instance */
+	const UCombatAttributeSet* GetAttributeSetFromASC() const;
 
 public:
 

@@ -573,6 +573,15 @@ void ACombatCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// For NPC characters that are never possessed by a controller, PossessedBy never fires
+	// and InitAbilityActorInfo is never called. Initialize here as a fallback so the ASC
+	// is always ready to receive gameplay effects.
+	if (!GetController())
+	{
+		UE_LOG(LogCombatCharacter, Log, TEXT("BeginPlay: %s has no controller — initializing ASC as standalone"), *GetName());
+		AbilitySystemComponent->InitAbilityActorInfo(this, this);
+	}
+
 	// save the relative transform for the mesh so we can reset the ragdoll later
 	MeshStartingTransform = GetMesh()->GetRelativeTransform();
 
@@ -634,25 +643,32 @@ void ACombatCharacter::NotifyControllerChanged()
 	}
 }
 
+const UCombatAttributeSet* ACombatCharacter::GetAttributeSetFromASC() const
+{
+	return AbilitySystemComponent ? AbilitySystemComponent->GetSet<UCombatAttributeSet>() : nullptr;
+}
+
 float ACombatCharacter::GetHealth() const
 {
-	const float Val = AttributeSet ? AttributeSet->GetHealth() : 0.0f;
-	UE_LOG(LogCombatCharacter, Verbose, TEXT("GetHealth: %s = %.1f"), *GetName(), Val);
-	return Val;
+	const UCombatAttributeSet* AS = GetAttributeSetFromASC();
+	return AS ? AS->GetHealth() : 0.0f;
 }
 
 float ACombatCharacter::GetMaxHealth() const
 {
-	return AttributeSet ? AttributeSet->GetMaxHealth() : 1.0f;
+	const UCombatAttributeSet* AS = GetAttributeSetFromASC();
+	return AS ? AS->GetMaxHealth() : 1.0f;
 }
 
 float ACombatCharacter::GetNodes() const
 {
-	return AttributeSet ? AttributeSet->GetNodes() : 0.0f;
+	const UCombatAttributeSet* AS = GetAttributeSetFromASC();
+	return AS ? AS->GetNodes() : 0.0f;
 }
 
 float ACombatCharacter::GetMaxNodes() const
 {
-	return AttributeSet ? AttributeSet->GetMaxNodes() : 1.0f;
+	const UCombatAttributeSet* AS = GetAttributeSetFromASC();
+	return AS ? AS->GetMaxNodes() : 1.0f;
 }
 
