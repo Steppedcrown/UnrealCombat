@@ -1,147 +1,52 @@
 # UnrealCombat
 
-A third-person melee combat system built in Unreal Engine 5 using C++ and the **Gameplay Ability System (GAS)**. The project explores data-driven ability design, frame-precise hit detection, and a node-based resource mechanic that ties a character's offensive options to their remaining health.
+A high-intensity, third-person tactical melee combat system demo. The game features fluid combo strings, frame-precise blocking, and a unique **Node System** that directly links a fighter's offensive resources to their mortality, culminating in brutal execution finishers.
 
 ---
 
-## Combat Mechanics
+## Core Resource: The Node System
 
-### Combo Attacks
-Light attacks chain into a multi-stage combo string. Input is cached between attacks so that a press during the current swing is queued and consumed the moment the `AnimNotifyState_ComboWindow` opens. If no input arrives before the window closes, the combo resets. Each combo stage maps to a named `AnimMontage` section, allowing the sequence to be extended purely through Blueprint configuration.
+At the heart of combat is the **Node System**, a shared energy mechanic that governs your most powerful abilities and determines when a fighter is vulnerable to being instantly killed.
 
-### Charged Attack
-Holding the attack input plays a charge-loop section of a dedicated montage. `AnimNotify_CheckChargedAttack` polls each frame to determine whether the button is still held. Releasing transitions immediately into the release strike section.
-
-### Block & Perfect Block
-Blocking applies a `State.Combat.Blocking` tag for a configurable window (~1 second). The attribute set intercepts incoming damage effects while this tag is active and fires a `BlockHit` gameplay event instead of applying HP reduction. A hit absorbed within the first **~0.15 s** (~9 frames at 60 fps) of activation counts as a **perfect block**, which:
-- Restores Nodes to the defender
-- Applies knockback to all enemies within a configurable radius
-
-### Expel
-A node-spending ability that deals damage and applies **TempNodes** to the target. TempNodes are a temporary resource buffer on the enemy that inflates their apparent Node count, setting up a Rip finisher.
-
-### Rip
-A node-spending execute-or-drain ability. On hit it branches on the target's `State.Status.Vulnerable` tag:
-
-| Target state | Outcome |
-|---|---|
-| Not Vulnerable | Minor damage + drain all Nodes from target to self |
-| Vulnerable | Instant kill via `GE_Kill` |
-
-When the target is both Vulnerable and locked on, Rip plays a dedicated **execution montage** using Motion Warping to snap the attacker into position.
-
-### Node System
-Nodes are a shared stamina/energy attribute that gate the more powerful abilities and determine when a character becomes killable.
-
-- Each character starts with a `BaseMaxNodes` pool (default: 4)
-- `MaxNodes` is reduced by 1 for every **20% health threshold** lost below full HP
-- Nodes reaching 0 applies `State.Status.Vulnerable` — the character can now be executed by Rip
-- Basic attacks **restore** Nodes on hit; Expel and Rip **consume** them on activation
-- **TempNodes** are a separate attribute applied by Expel that temporarily expand a target's Node pool, making them harder to Vulnerable without a follow-up Rip
-
-### Lock-On
-`ULockOnComponent` performs a sphere overlap on toggle, filters candidates to a configurable forward cone (default: 60°, 1500 cm), and locks to the closest valid target. While locked, the camera spring arm interpolates toward the target each tick, and the execution branch of Rip uses the locked actor as its Motion Warping warp target.
+* **The Pool:** Every fighter starts with a maximum pool of **Nodes** (Default: 4).
+* **The Health Attrition Loop:** As you take damage, your capacity to hold power shrinks. For every **20% of maximum health lost**, your maximum Node capacity permanently drops by 1. 
+* **The Vulnerable State:** If a fighter's Nodes drop to **0**, they enter a **Vulnerable** state. While Vulnerable, they can be targeted for a cinematic, one-hit execution.
+* **Resource Economy:** Basic strikes **restore** Nodes on a successful hit, while special abilities **consume** them.
 
 ---
 
-## Technical Implementation
+## Combat Mechanics & Moveset
 
-### Gameplay Ability System
-All combat actions are implemented as `UGameplayAbility` subclasses backed by `UGameplayEffect` for stat manipulation. The `UCombatAttributeSet` owns `Health`, `MaxHealth`, `Nodes`, `MaxNodes`, and `TempNodes`. `PostGameplayEffectExecute` is the single authoritative place where damage is clamped, blocking is checked, node penalties are recalculated, and status tags (`Vulnerable`, `Dead`) are applied.
+### 1. Basic & Combo Attacks
+Your bread-and-butter offensive option. Light attacks naturally chain into a multi-stage combo string. 
+* **Input Queuing:** The system features input caching—pressing the attack button slightly early queues up the next strike, ensuring seamless transitions between swings. Missing the timing window resets the combo chain back to the initial strike.
 
-```
-UCombatAttributeSet
-  ├── Health / MaxHealth
-  ├── Nodes / MaxNodes          ← MaxNodes recalculated every HP threshold crossed
-  └── TempNodes                 ← temporary buffer applied by Expel
-```
+### 2. Charged Heavy Attacks
+Holding down the attack input allows you to wind up a devastating heavy strike. Releasing the input at any point immediately unleashes the release blow, allowing you to catch enemies off-guard by varying your attack timing.
 
-### Data-Driven Move Registry
-Move parameters live in `UCombatMoveData` primary data assets (one per ability). At runtime, abilities look up their data from `UCombatMoveRegistry` — a `TMap<FGameplayTag, UCombatMoveData*>` asset assigned to the character — using the ability's own gameplay tag as the key. This keeps per-move tuning (damage, node cost/gain, frame data, weapon bone, sweep extents, VFX, SFX) entirely out of C++ and editable in-editor without recompilation.
+### 3. Active Defense: Block & Perfect Block
+Defending yourself requires precise timing to turn the tide of battle.
+* **Standard Block:** Holding the block button mitigates incoming damage, protecting your health bar at the cost of defensive positioning.
+* **Perfect Block:** Activating your block within a split-second window (~0.15 seconds) of an incoming attack triggers a Perfect Block. This rewards your precision by:
+    * Completely absorbing the damage.
+    * Refilling your **Nodes**.
+    * Unleashing a shockwave that knocks back all surrounding enemies.
 
-```
-UCombatMoveRegistry  (DataAsset)
-  └── Moves: TMap<FGameplayTag, UCombatMoveData*>
-        ├── Ability.BasicAttack  → DA_BasicAttack
-        ├── Ability.Block        → DA_Block
-        ├── Ability.Expel        → DA_Expel
-        └── Ability.Rip         → DA_Rip
+### 4. Expel (Special Ability)
+* **Cost:** Consumes Nodes.
+* **Effect:** A heavy-hitting strike that deals direct damage and inflicts **TempNodes** onto the target. 
+* **Tactical Use:** TempNodes act as an artificial buffer that inflates the enemy's apparent resource pool. This forces them closer to bankruptcy and sets them up perfectly for a follow-up *Rip* ability.
 
-UCombatMoveData  (PrimaryDataAsset)
-  ├── Damage, NodeCost, NodeGain
-  ├── StartupFrames, ActiveFrames, RecoveryFrames
-  ├── WeaponBoneName, SweepHalfExtent
-  └── AnimationMontage, HitEffect, HitSound
-```
+### 5. Rip & Execution (Finisher)
+A high-stakes ability that changes behavior drastically depending on the target's status:
 
-### Frame-Precise Hit Detection
-`UCombatHitDetectionComponent` sweeps a configurable box from the weapon bone's previous-tick world position to its current position every tick while tracing is active. A per-swing `TArray` deduplicates hits so each target is struck at most once per activation. Abilities drive the trace window through GAS gameplay events:
+| Target Status | Combat Outcome |
+| :--- | :--- |
+| **Normal State** | Deals minor damage and **drains all remaining Nodes** from the target, transferring them directly to you. |
+| **Vulnerable State** (0 Nodes) | Triggers an **Instant Kill Finisher**. If you are locked onto the target, the camera snaps into a cinematic view and your character automatically leaps into position to execute the enemy. |
 
-1. `ANS_ActiveFrames` (AnimNotifyState) fires `ActiveFramesBegin` / `ActiveFramesEnd` gameplay events at the anim layer
-2. Abilities listen via `UAbilityTask_WaitGameplayEvent` and call `StartTrace()` / `StopTrace()` on the component
-3. Each `OnHit` broadcast triggers the ability to apply the appropriate gameplay effects to the target
-
-### Animation Notify Architecture
-Three distinct notify types cover the combat animation pipeline:
-
-| Notify | Purpose |
-|---|---|
-| `AnimNotify_DoAttackTrace` | Legacy sphere-trace trigger (pre-GAS path, kept for reference) |
-| `AnimNotify_CheckCombo` | Evaluates cached input to decide whether to advance the combo chain |
-| `AnimNotify_CheckChargedAttack` | Polls the held-input flag to decide whether to transition to the attack or cancel |
-| `AnimNotifyState_ComboWindow` | Opens/closes the combo input acceptance window |
-| `ANS_ActiveFrames` | Gates `UCombatHitDetectionComponent` sweeps via GAS gameplay events |
-
-### Ability Flow (BasicAttack example)
-```
-Input pressed
-  └─ DoComboAttackStart()
-       └─ ASC->TryActivateAbility(BasicAttackAbilityClass)
-            └─ UGA_BasicAttack::ActivateAbility()
-                 1. Tag State.Combat.Attacking applied (blocks re-activation)
-                 2. Look up DA_BasicAttack from MoveRegistry
-                 3. Play AnimationMontage via UAbilityTask_PlayMontageAndWait
-                 4. WaitGameplayEvent(ActiveFramesBeginTag) → StartTrace()
-                 5. WaitGameplayEvent(ActiveFramesEndTag)   → StopTrace()
-                 6. OnHit → ApplyHitEffects(target)
-                      ├── GE_DamageHealth → target
-                      └── GE_RestoreNode  → self
-                 7. Montage end → EndAbility (tag removed)
-```
-
-### Project Structure
-```
-Source/UnrealCombat/Variant_Combat/
-  ├── CombatCharacter.h/.cpp          # Base character: input, combo/charged logic, respawn
-  ├── CombatAttributeSet.h/.cpp       # GAS attributes: Health, Nodes, status tag application
-  ├── CombatMoveData.h                # Primary data asset: per-move parameters
-  ├── CombatMoveRegistry.h/.cpp       # Tag → MoveData lookup asset
-  ├── CombatHitDetectionComponent.h   # Per-tick bone sweep, OnHit delegate
-  ├── LockOnComponent.h/.cpp          # Target acquisition, camera interpolation
-  ├── Abilities/
-  │   ├── GA_BasicAttack              # Combo hit with node restore on hit
-  │   ├── GA_Block                    # Block window + perfect block detection
-  │   ├── GA_Expel                    # Node-cost attack that applies TempNodes to target
-  │   └── GA_Rip                      # Node drain or execution finisher
-  ├── Animation/
-  │   ├── ANS_ActiveFrames            # GAS event bridge for hit window
-  │   ├── AnimNotify_CheckCombo       # Combo chain evaluation
-  │   ├── AnimNotify_CheckChargedAttack
-  │   └── AnimNotifyState_ComboWindow
-  ├── AI/
-  │   └── CombatAIController          # Base AI controller (Behavior Tree in Phase 11)
-  ├── Interfaces/
-  │   ├── CombatAttacker              # Attack trace / combo / charged attack contract
-  │   └── CombatDamageable            # Damage / death / healing / danger notification contract
-  └── UI/
-      └── CombatLifeBar               # Health bar widget component
-```
-
----
-
-## Engine & Dependencies
-- **Unreal Engine 5**
-- **Gameplay Ability System** (GAS) — abilities, effects, attribute sets, gameplay tags
-- **Motion Warping** — execution animation positioning
-- **Enhanced Input** — input actions for all combat controls
-- **Niagara** — hit VFX referenced from move data assets
+### 6. Target Lock-On
+Toggling the lock-on system automatically targets the closest enemy within a forward cone of vision. While locked on:
+* The camera dynamically tracks the target's movements.
+* Your character maintains proper spacing and orientation.
+* The cinematic *Rip* execution becomes fully available if the target's **Nodes** drops to 0.
