@@ -135,27 +135,27 @@ void ACombatCharacter::ChargedAttackReleased()
 void ACombatCharacter::BlockPressed()
 {
 	UE_LOG(LogCombatCharacter, Log, TEXT("BlockPressed: Attempting TryActivateAbilitiesByTag(Ability.Block)"));
-	FGameplayTagContainer Tags;
-	Tags.AddTag(FGameplayTag::RequestGameplayTag(FName("Ability.Block")));
-	const bool bSuccess = AbilitySystemComponent->TryActivateAbilitiesByTag(Tags);
+	FGameplayTagContainer AbilityTags;
+	AbilityTags.AddTag(FGameplayTag::RequestGameplayTag(FName("Ability.Block")));
+	const bool bSuccess = AbilitySystemComponent->TryActivateAbilitiesByTag(AbilityTags);
 	UE_LOG(LogCombatCharacter, Log, TEXT("BlockPressed: Result = %s"), bSuccess ? TEXT("Success") : TEXT("Failed"));
 }
 
 void ACombatCharacter::ExpelPressed()
 {
 	UE_LOG(LogCombatCharacter, Log, TEXT("ExpelPressed: Attempting TryActivateAbilitiesByTag(Ability.Expel)"));
-	FGameplayTagContainer Tags;
-	Tags.AddTag(FGameplayTag::RequestGameplayTag(FName("Ability.Expel")));
-	const bool bSuccess = AbilitySystemComponent->TryActivateAbilitiesByTag(Tags);
+	FGameplayTagContainer AbilityTags;
+	AbilityTags.AddTag(FGameplayTag::RequestGameplayTag(FName("Ability.Expel")));
+	const bool bSuccess = AbilitySystemComponent->TryActivateAbilitiesByTag(AbilityTags);
 	UE_LOG(LogCombatCharacter, Log, TEXT("ExpelPressed: Result = %s"), bSuccess ? TEXT("Success") : TEXT("Failed"));
 }
 
 void ACombatCharacter::RipPressed()
 {
 	UE_LOG(LogCombatCharacter, Log, TEXT("RipPressed: Attempting TryActivateAbilitiesByTag(Ability.Rip)"));
-	FGameplayTagContainer Tags;
-	Tags.AddTag(FGameplayTag::RequestGameplayTag(FName("Ability.Rip")));
-	const bool bSuccess = AbilitySystemComponent->TryActivateAbilitiesByTag(Tags);
+	FGameplayTagContainer AbilityTags;
+	AbilityTags.AddTag(FGameplayTag::RequestGameplayTag(FName("Ability.Rip")));
+	const bool bSuccess = AbilitySystemComponent->TryActivateAbilitiesByTag(AbilityTags);
 	UE_LOG(LogCombatCharacter, Log, TEXT("RipPressed: Result = %s"), bSuccess ? TEXT("Success") : TEXT("Failed"));
 }
 
@@ -195,10 +195,10 @@ void ACombatCharacter::DoLook(float Yaw, float Pitch)
 
 void ACombatCharacter::DoComboAttackStart()
 {
-	FGameplayTagContainer Tags;
-	Tags.AddTag(FGameplayTag::RequestGameplayTag(FName("Ability.BasicAttack")));
+	FGameplayTagContainer LocalTags;
+	LocalTags.AddTag(FGameplayTag::RequestGameplayTag(FName("Ability.BasicAttack")));
 	UE_LOG(LogCombatCharacter, Log, TEXT("DoComboAttackStart: Attempting TryActivateAbilitiesByTag(Ability.BasicAttack)"));
-	if (AbilitySystemComponent->TryActivateAbilitiesByTag(Tags))
+	if (AbilitySystemComponent->TryActivateAbilitiesByTag(LocalTags))
 	{
 		UE_LOG(LogCombatCharacter, Log, TEXT("DoComboAttackStart: GAS ability activated successfully"));
 		return;
